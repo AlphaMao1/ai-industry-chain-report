@@ -1,0 +1,9 @@
+{
+  "name": "ai-industry-chain-report",
+  "private": true,
+  "version": "0.1.0",
+  "scripts": {
+    "dev": "npx --yes vite --host 0.0.0.0"
+  },
+  "devDependencies": {}
+}

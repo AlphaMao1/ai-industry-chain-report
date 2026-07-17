@@ -1,0 +1,277 @@
+<!DOCTYPE html><html lang="zh-CN"><head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>AI 产业链：价值、瓶颈与缺口 · 交互研究版</title>
+<meta name="description" content="利润池 · 供需缺口 · 两层价格 · CapEx 回收 · 中国链 · 出口管制 · 反证登记册。as of 2026-07-17。"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@500;700;900&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="css/style.css"/>
+</head>
+<body>
+
+<!-- ═══════════ 封面 ═══════════ -->
+<header id="cover">
+  <div class="cover-inner">
+    <p class="cover-kicker">AI INDUSTRY CHAIN · VALUE / BOTTLENECK / GAP · AS OF 2026-07-17</p>
+    <h1 class="cover-title">AI 产业链<br/><span class="t-blue">价值、瓶颈与缺口</span></h1>
+    <p class="cover-sub">利润池 · 供需缺口 · 两层价格 · CapEx 回收 · 中国链 · 出口管制 · 反证登记册</p>
+    <p class="cover-lede">AI 产业链的核心不再是「谁有最强模型」，而是<strong>「谁能把稀缺物理供给转化为可结算的生产力单元」</strong>；当前利润池 <strong>71.3%</strong> 在上游，供需缺口 <strong>0.70→0.97</strong> 温和收紧，价格已分两层。</p>
+    <div class="key-band" id="key-band">
+      <div class="kb-item blue"><div class="kb-v" data-kb="share">71.3%</div><div class="kb-k">利润池上游份额（半导体层，base 情景）</div></div>
+      <div class="kb-item"><div class="kb-v" data-kb="gap">0.97</div><div class="kb-k">供需缺口比 12 个月 base 轨迹（起点 0.70）</div></div>
+      <div class="kb-item"><div class="kb-v" data-kb="ds">3.94x<span class="u"> vs </span>2.85x</div><div class="kb-k">需求增速 vs 供给增速（base，年化）</div></div>
+      <div class="kb-item blue"><div class="kb-v" data-kb="rev">$326B</div><div class="kb-k">MaaS 收入池 base 读数（年化 run-rate）</div></div>
+      <div class="kb-item red"><div class="kb-v"><span class="kb-lamp"></span>黄橙灯</div><div class="kb-k">CapEx 回收判断：四大 2026E 合计 $695-725B</div></div>
+    </div>
+    <div class="cover-chips">
+      <button class="chip" data-goto="#sec-exec">执行摘要</button>
+      <button class="chip" data-goto="#sec-profit">利润池 71.3%</button>
+      <button class="chip" data-goto="#sec-gap">供需缺口</button>
+      <button class="chip" data-goto="#sec-price">价格两层</button>
+      <button class="chip" data-goto="#sec-capex">CapEx 黄橙灯</button>
+      <button class="chip" data-goto="#sec-gates">供给闸门</button>
+      <button class="chip" data-goto="#sec-china">中国链</button>
+      <button class="chip" data-goto="#sec-scen">出口管制三情景</button>
+      <button class="chip" data-goto="#sec-signals">反证登记册</button>
+    </div>
+    <p class="cover-anchor">交互研究版 · 每个读数可点击下钻到带日期的出处 · 全部数字回溯 ai-industry-chain dossier 的 canonical CSV 与模型读数 · 无源不画，宁缺勿编 · 仅供参考，不构成投资建议</p>
+    <div class="scroll-hint"><span></span>SCROLL</div>
+  </div>
+</header>
+
+<main>
+
+<!-- ═══════════ §1 执行摘要 + 时间线事件墙 ═══════════ -->
+<section id="sec-exec" class="band">
+  <div class="prose">
+    <p class="sec-no">§1 · 执行摘要</p>
+    <h2>价值在上游结算，瓶颈在物理世界</h2>
+    <p class="dek">把 2023 到 2026 的事件铺开看：需求点火、价格先崩后立、管制从芯片打到模型。<strong>三年事件墙读完，利润池、缺口、闸门三张图才有坐标。</strong></p>
+    <p>本报告是一张产业链的利润地图，不是模型能力排行榜。<b>判断先行：可结算的利润正在向稀缺的物理供给集中——算力芯片、HBM、先进封装、电力交付；模型层创造需求，尚未证明留存利润。</b>证据按四条线展开：利润池（§2）回答「钱在哪一层结算」；供需缺口（§3）回答「稀缺在加剧还是缓解」；价格两层（§4）回答「谁在提价、谁在被补贴」；CapEx 回收（§5）回答「买单的人还能撑多久」。中国链（§7）与出口管制（§8）是同一套逻辑的另两个投影面，反证登记册（§9）给出每条结论的证伪开关。</p>
+  </div>
+  <div class="wide xl">
+    <div id="chart-timeline" class="chart-frame"></div>
+  </div>
+  <div class="prose">
+    <p>时间线上最值得停驻的三块牌匾：<b>2025-08，GPT-5 把旗舰价格打到 $1.25 谷底</b>，市场一度宣布模型价格已崩；随后六个月发生的事情是 §4 的 V 形反转。<b>2026-06，Claude Fable 5 被行政令全球下架 19 天</b>——前沿模型第一次被当作芯片来管制，出口管制从硬件层打到了模型层。<b>2026-07-16，TSMC 在法说会上亲口说出「severely supply-constrained」</b>，封装「已成为限制客户成长的瓶颈」——供给刚性的最高级别官方确认。</p>
+    <div class="read-fa"><span class="fa-tag">读法 · §1</span>事件墙不是编年史，是论点的证物陈列：<b>每一次供给约束的官方确认（红、蓝牌匾）都对应着利润池的一次再分配。</b>后面九章，本质上是把这三块牌匾展开算账。</div>
+  </div>
+</section>
+
+<!-- ═══════════ §2 利润池 ═══════════ -->
+<section id="sec-profit" class="band">
+  <div class="prose">
+    <p class="sec-no">§2 · 利润池</p>
+    <h2>71.3%：利润在上游结算</h2>
+    <p class="dek">Reconstruction v0.5 单季读数：正利润池 $91.7B，半导体层拿走 71.3%。<strong>模型/API lab 净口径为负——需求发动机不是利润发动机。</strong></p>
+    <p>把整条链按「谁在本季结算到经营利润」切成六层，v0.5 的 base 读数是：<b>半导体 $65.33B（71.3%）、云 $10.36B（11.3%）、数据中心/电力 $8B（8.7%）、workflow 应用 $6B（6.5%）、服务 $2B（2.2%）、模型/API lab -$5B（-5.8%）。</b>半导体份额较 v0.4 微降 0.9pt——<b>这是 DC/电力与 workflow 锚点增强带来的相对稀释，不是上游变弱。</b>切换下方情景开关，看同一结构在 low / high 两端的形状：上游主导在所有情景下成立，变的只是斜率。</p>
+    <p>两层的读数值得单独点名。DC/电力/液冷是本版上修最多的一层（base $8B，high $13B），speed-to-power 证据在 2026-07 显著增强——backlog 以「年」计。模型层的 -$5B 不是失败，是未结算：OpenAI 2025 审计口径收入 $13.07B、经营亏损 -$20.92B，Anthropic run-rate 冲到 $47B——<b>模型层把需求点着了，利润留在别人的账上。</b></p>
+  </div>
+  <div class="wide xl">
+    <div id="chart-profitpool" class="chart-frame"></div>
+  </div>
+  <div class="prose">
+    <div class="read-fa"><span class="fa-tag">读法 · §2</span>利润池图回答「谁在本季赚到钱」，不回答「谁的叙事最强」。<b>份额的微降是稀释不是变弱；真正的分界线在零轴——模型层什么时候转正，才是产业链利润地图下一次重画的时刻。</b></div>
+  </div>
+</section>
+
+<!-- ═══════════ §3 供需缺口 ═══════════ -->
+<section id="sec-gap" class="band">
+  <div class="prose">
+    <p class="sec-no">§3 · 供需缺口</p>
+    <h2>3.94x 对 2.85x：缺口温和收紧</h2>
+    <p class="dek">需求端六条增长线加权合成 3.94x/年；供给端产能 1.9x × 服务速率 1.5x = 2.85x。<strong>缺口比 0.70 起步，base 路径 12 个月后 0.97——逼近 1.0，稀缺加剧、强度温和。</strong></p>
+    <p>需求端不是一个数字，是六条有锚的增长线：<b>中国 MaaS 以 55% 的权重、4.0x 的 base 增速成为第一承重项</b>（豆包日均 token 同比 +10x、近三个月翻倍）；<b>coding agent 是斜率最陡的一极（base 8.0x）</b>——Codex 周活 5 个月 8x，agentic 单任务 token 消耗是聊天的 15x-1000x。第一张图把每条线的权重（条长）与增速（右侧色阶标记）摆在一起，悬停可看每条线对 base 增长的贡献份额。</p>
+    <p>供给端在 2026-07-17 做了硬化处理：存量约 15-20M H100 当量，2026 年新增约 14-16M 颗；<b>服务速率维持 Google 校准的 1,600 tok/s，MLPerf 峰值只作上界不打进 base</b>。第二张图是从 0.70 出发的三条路径——tightening 2.27（红）、base 0.97（蓝）、loosening 0.34（灰），1.0 参考线之上才是真正意义上的「越买越缺」。</p>
+  </div>
+  <div class="wide xl">
+    <div id="chart-growth" class="chart-frame"></div>
+  </div>
+  <div class="wide xl">
+    <div id="chart-gap" class="chart-frame"></div>
+  </div>
+  <div class="prose">
+    <blockquote class="quote-card" data-quote="nadella"></blockquote>
+    <p>「warm shells」是第一手的约束证词：<b>短缺的正在从芯片变成「有电可插的壳体」</b>。这正是供给端合成只给 2.85x 的物理原因——产能增速与服务速率增速相乘，中间隔着 HBM、封装、并网三道实体闸门（§6）。</p>
+    <div class="read-fa"><span class="fa-tag">读法 · §3</span>缺口模型的两个第一敏感假设都摆在图上：<b>中国 MaaS 的口径（含 cache，未核验）与 coding agent 的 8.0x 斜率。</b>0.97 是温和收紧，不是失控——它支持「稀缺加剧」的定价判断，不支持「泡沫即破」的恐慌判断。</div>
+  </div>
+</section>
+
+<!-- ═══════════ §4 价格两层 ═══════════ -->
+<section id="sec-price" class="band">
+  <div class="prose">
+    <p class="sec-no">§4 · 价格两层</p>
+    <h2>V 形反转：价格分成了两层</h2>
+    <p class="dek">2025-08 GPT-5 把旗舰打到 $1.25 谷底；此后前沿档量价齐升，走量档量升价跌。<strong>「模型价格崩了」是上一季的故事，这一季的故事是分层。</strong></p>
+    <p>第一张图是旗舰/超档的完整轨迹：o1-pro 的 $150 是历史峰值，GPT-5 的 $1.25 是谷底——GPT-4 发布价 $30 到 GPT-5 $1.25，29 个月 24x，市场就在那一刻宣布价格崩盘。<b>随后是 V 形反转：Anthropic 在 Opus 之上新开 Mythos 超档 $25，OpenAI 开出 GPT-5.5 Pro $30——当前最贵 API 档。</b>点与点之间没有插值承诺，每个点都是一次官方定价事件。</p>
+    <p>第二张图是中国旗舰的台阶：Kimi K2 $0.6 → K2.6 $0.95 → K3 $3，<b>追赶前沿的代价是守不住价格——K3 定价已是 K2 的 5 倍</b>；Qwen 约 2x 并转闭源。唯一的结构性例外是 DeepSeek：牌价涨 6 倍、靠永久 75 折稳住实付，独守走量档。两条曲线一张一弛，正是 C/F 两层的活体样本。</p>
+  </div>
+  <div class="wide xl">
+    <div id="chart-frontier" class="chart-frame"></div>
+  </div>
+  <div class="wide xl">
+    <div id="chart-chinafrontier" class="chart-frame"></div>
+  </div>
+  <div class="prose">
+    <p>两层机制的参数摆在下方的对比卡里：<b>C 层（走量档）牌价锚 $1.5、折扣打到 0.3-0.7、年降幅 -60~-80%，Jevons 成立——量升价跌、收入池持平；F 层（前沿档）牌价锚 $12、折扣仅 0.6-0.9、12 个月 -20%~+50%，V 形反转后量价齐升。</b>同一枚 token，两种价格纪律。</p>
+  </div>
+  <div class="wide">
+    <div id="chart-pricetier" class="chart-frame"></div>
+  </div>
+  <div class="prose">
+    <p>把两层各自乘以量，得到 MaaS 收入池：当前 base <b>$325.9B</b>（low $240.8B / high $411.0B）。这个读数自带一条对账纪律：可识别锚点合计约 $150-200B+，base 偏高 1.5-2x——主因是 C 层有效价对中国补贴型 MaaS 偏贵。<b>我们对自家模型的价格假设保持同样的怀疑。</b></p>
+    <div class="callout-red">
+      <span class="co-tag">自校验发现 · 下季第一裁决问题</span>
+      <p>12 个月自校验：C 层 $99.6B → $105.8B（量升价跌对冲，Jevons 成立）；<b>F 层 $226B → $1,366B 不可能成立——coding 线 8x 增速与 F 价格持平必有一错。</b>这是下季度财报季要裁决的第一问题。</p>
+    </div>
+  </div>
+  <div class="wide xl">
+    <div id="chart-revenuepool" class="chart-frame"></div>
+  </div>
+  <div class="prose">
+    <div class="read-fa"><span class="fa-tag">读法 · §4</span>价格分层的投资含义不对称：<b>C 层赚流量的钱、F 层赚稀缺的钱。</b>中国旗舰涨价说明「前沿档门票」全球同价；而 F 层 $1,366B 的投影既然不成立，要么 coding 增速下台阶（F-05），要么 F 有效价扛不住——两条路径都已被写进反证登记册。</div>
+  </div>
+</section>
+
+<!-- ═══════════ §5 CapEx 回收 ═══════════ -->
+<section id="sec-capex" class="band">
+  <div class="prose">
+    <p class="sec-no">§5 · CapEx 回收</p>
+    <h2>$695-725B：黄橙灯</h2>
+    <p class="dek">四大云商 2026E 资本开支合计 $695-725B（+~70%），对照 2025 年的 $412.9B。<strong>需求锚点干净程度不一：这是本报告唯一的黄橙灯判断。</strong></p>
+    <p>逐家看：Microsoft 2026 共识约 $190B，FY27 指引是最大惊喜风险；Alphabet 指引 $180-190B，Cloud +63%、backlog $462B，需求锚最干净；<b>Amazon 约 $200B，但 Q1 现金 capex $44.2B（+77%）已越过当季经营现金流——现金压力最高；</b>Meta 指引 $125-145B（4 月上调），Q1 实际仅 $19.8B——后置爬坡，兑现压力留到下半年。</p>
+    <p>判断给得很明确：<b>黄橙灯。</b>Microsoft / Alphabet 的需求锚点较干净；Amazon 单季 PPE 超 OCF、commitments 最高，是四家之中最紧的一张资产负债表；Meta 的 AI 收入不披露，爬坡后置。市场共识锚 $725B，下一验证窗是 2026-07-22~29 的财报季。</p>
+  </div>
+  <div class="wide xl">
+    <div id="chart-capex" class="chart-frame"></div>
+  </div>
+  <div class="wide">
+    <div id="chart-capexlamp" class="chart-frame"></div>
+  </div>
+  <div class="prose">
+    <div class="read-fa"><span class="fa-tag">读法 · §5</span>CapEx 是整条链的总开关：<b>它一旦回撤，§2 的上游份额、§3 的缺口路径、§4 的 F 层量价会同时改数。</b>所以 FY27 指引被单独写进反证登记册 F-06——任何一家巨头增速低于 +14%，黄橙灯转红。</div>
+  </div>
+</section>
+
+<!-- ═══════════ §6 供给闸门 ═══════════ -->
+<section id="sec-gates" class="band">
+  <div class="prose">
+    <p class="sec-no">§6 · 供给闸门</p>
+    <h2>四级闸门：刚性即排序</h2>
+    <p class="dek">HBM &gt; CoWoS &gt; 电力交付 &gt; 光互联。<strong>排序不看打分，看有没有绕行方案。</strong></p>
+    <p>第一级 <b>HBM：2026 售罄、2027 HBM4 全订完，无绕行路线</b>——三家寡头加晶圆转换损耗，SK 崔泰源把缺口看到 2030。第二级 <b>CoWoS / 先进封装</b>：TSMC 2026-07-16 法说会的官方措辞是「severely supply-constrained」，绕行方案（OSAT、EMIB）尚在早期。第三级 <b>电力交付</b>：美国在建数据中心 32GW（70% AI），并网、许可、高密交付是瓶颈。第四级 <b>光互联</b>：紧但有竞争，多供应商与铜光共存给出了真实的绕行。</p>
+    <blockquote class="quote-card" data-quote="wei"></blockquote>
+    <p>守门人自己的措辞就是证据等级：<b>「severely supply-constrained」不是卖方措辞，是 TSMC 法说会的官方措辞</b>，且把封装点名为「限制客户成长的瓶颈」、capex 上调至 $60-64B。供给刚性是本周期利润池守在闸门、不在云端的物理基础。</p>
+  </div>
+  <div class="wide xl">
+    <div id="chart-gates" class="chart-frame"></div>
+  </div>
+  <div class="prose">
+    <div class="read-fa"><span class="fa-tag">读法 · §6</span>闸门排序的用法是反着读：<b>越往下，绕行越多、超额利润越薄；越往上，越接近「无绕行定价权」。</b>注意 HBM 行内的 watch 注记——1Q26 起 HBM 每片晶圆收入已被 DDR5 RDIMM 反超，这是刚性排序里唯一出现的松动信号（已列入 F-04）。</div>
+  </div>
+</section>
+
+<!-- ═══════════ §7 中国链 ═══════════ -->
+<section id="sec-china" class="band">
+  <div class="prose">
+    <p class="sec-no">§7 · 中国链</p>
+    <h2>利润在哪一层可验证</h2>
+    <p class="dek"><strong>可验证利润在 AI CapEx / 国产替代供给链；模型/App 量增利未证。</strong>五层证据按强度分色：蓝 = 利润持续兑现，黄 = 周期观察，灰 = 量增利未证。</p>
+    <p>最强的一层是国产算力芯片：海光 H1 净利 +41.5~52.3%、摩尔线程 H1 营收 +135~149%——<b>国产替代的订单与利润在同一季兑现</b>。光互连已验证：中际旭创订单覆盖 2026 全年、源杰 Q1 净利 +1153%，但首次官方承认「部分原有客户需求下调」——结构轮动已经写进 F-08。DRAM/存储是唯一的黄灯层：长鑫 H1 净利指引 500-570 亿兑现 cycle beta，但 Q3 合约价涨幅收敛到 +13~18%——周期进入中后段。模型/App 层量增利未证：唯一可验证的模型经济收入层是云（阿里云 AI 收入 89.71 亿/季）。</p>
+  </div>
+  <div class="wide">
+    <div id="chart-china" class="chart-frame"></div>
+  </div>
+  <div class="prose">
+    <div class="read-fa"><span class="fa-tag">读法 · §7</span>中国链的分层逻辑与全球链同构：<b>利润守在供给链，模型层仍在烧钱换需求。</b>验证日程写在证据里——寒武纪 8 月半年报看应收/预付/存货质量，光模块 8-19~8-25 半年报验证毛利与订单结构。</div>
+  </div>
+</section>
+
+<!-- ═══════════ §8 出口管制 ═══════════ -->
+<section id="sec-scen" class="band">
+  <div class="prose">
+    <p class="sec-no">§8 · 出口管制</p>
+    <h2>三情景：冻结是基线</h2>
+    <p class="dek">S1 收紧 / S2 维持冻结（基线）/ S3 放松。<strong>2026-06 的 19 天下架，已经把「模型层管制」从假设变成了先例。</strong></p>
+    <p>基线 S2 的形状：NVIDIA 对华高端直销归零、非中需求消化产能；国产算力按现有节奏兑现（海光已验证）；长鑫从样品走向量产；光模块/PCB 的 800G/1.6T 逻辑不变。<b>S1 的最强催化落在国产链——订单、流片、产能全加速；S3 的边际利空同样落在国产链，靠政策采购托底。</b>矩阵里每个单元格都是一条可推演的传导路径，悬停高亮、点击下钻。</p>
+  </div>
+  <div class="wide xl">
+    <div id="chart-scenarios" class="chart-frame"></div>
+  </div>
+  <div class="prose">
+    <p>先例必须记录在案：<b>Claude Fable 5 / Mythos 5 全球停售 19 天（06-12 → 07-01）</b>——前沿模型首次被行政令直接中断供给。模型层从此进入了管制矩阵：S1 情景下「中国模型获全球分发真空」不再是修辞。</p>
+    <div class="read-fa"><span class="fa-tag">读法 · §8</span>情景矩阵的用法是盯触发条件而不是押概率：<b>B30A 放行 → S3；管制扩到 HBM/零部件/第三国 → S1；模型层再次下架 → S1（模型层）。</b>触发一旦发生，回到 §7 的分层卡片重排强弱。</div>
+  </div>
+</section>
+
+<!-- ═══════════ §9 反证登记册 ═══════════ -->
+<section id="sec-signals" class="band">
+  <div class="prose">
+    <p class="sec-no">§9 · 反证登记册</p>
+    <h2>八条触发器：什么时候改主意</h2>
+    <p class="dek">研究的价值，是提前一个季度知道什么时候该改主意。<strong>任何一条触发，就回到对应模型重估。</strong></p>
+    <p>八条触发器各自挂载一个本报告的承重结论：需求增速（F-01）与供给增速（F-02）看守 §3 的缺口路径；DRAM 周期位置（F-03）与 HBM 相对盈利（F-04）看守 §6 的闸门排序与 §7 的存储层；F 层量价自校验（F-05）看守 §4；CapEx 指引（F-06）与 neocloud 经济性（F-07）看守 §5；光互连结构轮动（F-08）看守 §7。<b>每条都给出当前读数、触发阈值与触发后的动作——触发条件写在牌面上，不藏在脚注里。</b></p>
+  </div>
+  <div class="wide xl">
+    <div id="chart-signals" class="chart-frame"></div>
+  </div>
+  <div class="prose">
+    <div class="read-fa"><span class="fa-tag">读法 · §9</span>登记册是活文档：<b>下一批观察窗集中在 7-22~29 财报季（GOOGL / MSFT / META）与 8 月 A 股半年报。</b>触发一条，改一个数；改一个数，重画一张图——这正是模型卡存在的意义（§10）。</div>
+  </div>
+</section>
+
+<!-- ═══════════ §10 方法、时效与边界 ═══════════ -->
+<section id="sec-method" class="band">
+  <div class="prose">
+    <p class="sec-no">§10 · 方法、时效与边界</p>
+    <h2>每个结论可回溯，每条边界摆上台面</h2>
+    <p class="dek"><strong>as-of 纪律：全部锚点限当季证据，任何读数超过 120 天未刷新即报警。</strong>模型卡概念：每个结论可回溯到 dossier 的模型与 canonical CSV。</p>
+    <p>本报告是 progressive research 的一次切片：数据层是 dossier 的 canonical rows（截至 2026-07-17 的证据刷新），展示层只做可视化与下钻，不新增任何数字。所有图表共用四类来源标注——公司披露 / 券商研究 / 行业官方 / 自研模型；四类之外的读数，一律不进图。</p>
+    <div class="note-box"><b>已知失真清单（五条，照实列出）：</b><br/>
+      ① S-03 供给服务速率未拆档——单一速率校准（Google 1,600 tok/s）抹平了代际与机型差异；<br/>
+      ② 中国 MaaS 的有效价偏贵——C 层价格假设对中国补贴型 MaaS 系统性偏高，是收入池 base 读数偏高 1.5-2x 的主因；<br/>
+      ③ Anthropic 口径存在云分成争议——run-rate 与云渠道分成后的净口径之间有一段距离；<br/>
+      ④ tibo / X 来源为 leak 层级——只作旁证，不作锚点（使用处已逐处注明）；<br/>
+      ⑤ MLPerf 峰值仅作上界——不进 base 供给合成，防止实验室速率高估可交付吞吐。</div>
+    <div class="read-fa"><span class="fa-tag">读法 · §10</span>方法论一句话：<b>结论可以错，失真必须已知。</b>下次刷新时，先对账 §9 的八条触发器，再动任何一张图。</div>
+  </div>
+</section>
+
+<!-- ═══════════ 页脚 ═══════════ -->
+<footer id="sec-sources">
+  <div class="prose">
+    <p class="sec-no">附录 · 来源纪律</p>
+    <h2>四类标注，宁缺勿编</h2>
+    <div class="note-box">
+      <p><b>来源纪律。</b>每个数字带四类出处之一：<span class="src-cat company">公司披露</span>申报文件、法说会与 IR 材料；<span class="src-cat broker">券商研究</span>只按类目标注；<span class="src-cat industry">行业官方</span>TrendForce、LightCounting、Epoch、政府出版物；<span class="src-cat model">自研模型</span>利润池 Reconstruction v0.5、供需缺口 v0.3.1、价格两层与收入池合成。可组合标注；四类之外不画。</p>
+      <p><b>时效纪律。</b>as-of 2026-07-17：锚点限当季证据，120 天未刷新即报警。引用口径（leak / 市场口径）在卡片内逐处注明层级。</p>
+    </div>
+    <p class="colophon">数据与模型：ai-industry-chain dossier（progressive research），as of 2026-07-17 · 交互研究版 · 工程范式参考 asic42 标杆站 · 仅供参考，不构成投资建议</p>
+  </div>
+</footer>
+
+</main>
+
+<!-- 统一下钻卡 -->
+<div id="drill-card" hidden=""></div>
+
+<script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
+<script src="js/data.js"></script>
+<script src="js/utils.js"></script>
+<script src="js/charts/timeline.js"></script>
+<script src="js/charts/profitpool.js"></script>
+<script src="js/charts/growthlines.js"></script>
+<script src="js/charts/gap.js"></script>
+<script src="js/charts/frontier.js"></script>
+<script src="js/charts/chinafrontier.js"></script>
+<script src="js/charts/pricetier.js"></script>
+<script src="js/charts/revenuepool.js"></script>
+<script src="js/charts/capex.js"></script>
+<script src="js/charts/gates.js"></script>
+<script src="js/charts/china.js"></script>
+<script src="js/charts/scenarios.js"></script>
+<script src="js/charts/signals.js"></script>
+<script src="js/main.js"></script>
+
+</body></html>
