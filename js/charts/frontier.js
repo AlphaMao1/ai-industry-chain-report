@@ -1,127 +1,148 @@
-// §4a 前沿档价格 V 形反转（宿主 #chart-frontier）
-// 旗舰/超档轨迹：log 价格轴；谷底 GPT-5 $1.25、峰值 o1-pro $150、当前峰值 GPT-5.5 Pro $30 标注；
-// V 形谷底参考线；点可点下钻。数据：RPT.frontierPrice。
+// §3 旗舰价格 V 形反转（宿主 #chart-frontier）
+// 对数价格轴散点+连线：谷底 GPT-5 $1.25（红色虚线参考线）→ 连续多代上移 → 当前在售旗舰为谷底 4 倍。
+// 档位三色（墨=旗舰 / 浅蓝=推理档 / 电蓝=超档）；关键点加粗标签；同日两点标签错位防叠；
+// 点拐点下钻（定价页日期与档位）。数据全部来自 RPT.frontierPrice / RPT.frontierExtras。
 (() => {
   const host = document.getElementById("chart-frontier");
-  if (!host || !window.RPT) return;
+  if (!host || !window.RPT || !RPT.frontierPrice) return;
   const body = U.frame(host, {
-    title: "前沿档价格 · V 形反转（$/MTok input）",
-    sub: "对数价格轴 · 墨 = 旗舰 · 蓝 = 推理档 · 红 = 超档 · 点击任意点下钻",
-    src: "公司披露 · 券商研究",
+    title: "旗舰价格 V 形反转（美元/百万 token · 输入价 · 对数轴）",
+    sub: "墨 = 常规旗舰 · 浅蓝 = 推理档 · 电蓝 = 超档 · 红虚线 = 谷底参考线 · 点击任意点下钻",
+    src: "官方披露 · 券商研究",
   });
 
-  const P = U.PAL;
-  const data = RPT.frontierPrice.map(d => ({ ...d, t: new Date(d.date + "-01T00:00:00") }));
-  const TCOL = { frontier: P.ink, reasoning: P.blue, super: P.red };
-  const TCNL = { frontier: "旗舰", reasoning: "推理档", super: "超档" };
+  const P = U.PAL, MONO = U.FONTS.mono, SERIF = U.FONTS.serif;
+  const svgEl = U.svgEl;
+  const data = RPT.frontierPrice.map(d => ({ ...d, t: new Date(d.date + "-01T00:00:00") }))
+    .sort((a, b) => a.t - b.t);
+  const TCOL = { frontier: P.ink, reasoning: P.blueLo, super: P.blue };
+  const TCNL = { frontier: "常规旗舰", reasoning: "推理档", super: "超档" };
 
-  const W = 1080, H = 430, ML = 58, MR = 30, TOP = 34, BOT = 46;
-  const x = d3.scaleTime()
-    .domain(d3.extent(data, d => d.t))
-    .range([ML, W - MR]).nice();
-  const y = d3.scaleLog().domain([1, 200]).range([H - BOT, TOP]).clamp(true);
+  const W = 1080, H = 440, ML = 58, MR = 30, TOP = 40, BOT = 48;
+  const MIN_W = 760;
+  const t0 = data[0].t, t1 = data[data.length - 1].t;
+  const pad = (t1 - t0) * 0.04;
+  const xOf = t => ML + (t - (t0 - pad)) / ((t1 + pad) - (t0 - pad)) * (W - ML - MR);
+  const yOf = p => {  // log10 轴，域 [1, 200]
+    const v = Math.min(200, Math.max(1, p));
+    return (H - BOT) - Math.log10(v) / Math.log10(200) * (H - BOT - TOP);
+  };
 
-  const svg = d3.select(body).append("svg")
-    .attr("viewBox", `0 0 ${W} ${H}`)
-    .style("width", "100%").style("display", "block")
-    .attr("data-drill-keep", "1");
+  const scroller = document.createElement("div");
+  scroller.style.cssText = "overflow-x:auto;-webkit-overflow-scrolling:touch";
+  body.appendChild(scroller);
+  const svg = svgEl("svg", {
+    width: "100%", height: H, viewBox: `0 0 ${W} ${H}`,
+    style: `display:block;min-width:${MIN_W}px`, "data-drill-keep": "1",
+  });
+  scroller.appendChild(svg);
+  const animated = [];
 
-  // 价格网格（log）
+  // ── 价格网格（log）──
   [1, 5, 10, 30, 100, 200].forEach(v => {
-    svg.append("line").attr("x1", ML).attr("x2", W - MR)
-      .attr("y1", y(v)).attr("y2", y(v)).attr("stroke", P.lineLo);
-    svg.append("text").attr("x", ML - 8).attr("y", y(v) + 3.5)
-      .attr("text-anchor", "end")
-      .attr("style", `font:10px ${U.FONTS.mono};fill:${P.inkLo}`)
-      .text("$" + v);
+    svg.appendChild(svgEl("line", { x1: ML, x2: W - MR, y1: yOf(v), y2: yOf(v), stroke: P.lineLo }));
+    const t = svgEl("text", { x: ML - 8, y: yOf(v) + 3.5, "text-anchor": "end",
+      style: `font:10px ${MONO};fill:${P.inkLo}` });
+    t.textContent = "$" + v;
+    svg.appendChild(t);
   });
-  // 时间刻度
-  x.ticks(6).forEach(t => {
-    svg.append("text").attr("x", x(t)).attr("y", H - BOT + 20)
-      .attr("text-anchor", "middle")
-      .attr("style", `font:10px ${U.FONTS.mono};fill:${P.inkLo}`)
-      .text(d3.timeFormat("%Y-%m")(t));
-  });
-
-  // 谷底参考线（GPT-5 2025-08）
-  const valley = data.find(d => d.label.includes("GPT-5（"));
-  if (valley) {
-    const vl = svg.append("line")
-      .attr("x1", x(valley.t)).attr("x2", x(valley.t))
-      .attr("y1", TOP - 6).attr("y2", H - BOT)
-      .attr("stroke", P.red).attr("stroke-width", 1)
-      .attr("stroke-dasharray", "3 4").attr("opacity", 0.55);
-    svg.append("text")
-      .attr("x", x(valley.t)).attr("y", TOP - 10)
-      .attr("text-anchor", "middle")
-      .attr("style", `font:9.5px ${U.FONTS.mono};fill:${P.red}`)
-      .text("谷底 2025-08 · 此后 V 形反转");
+  // ── 时间刻度（每 6 个月）──
+  for (let d = new Date(2024, 4, 1); d <= t1; d = new Date(d.getFullYear(), d.getMonth() + 6, 1)) {
+    const t = svgEl("text", { x: xOf(d), y: H - BOT + 20, "text-anchor": "middle",
+      style: `font:9.5px ${MONO};fill:${P.inkLo}` });
+    t.textContent = d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0");
+    svg.appendChild(t);
   }
 
-  // 连线（按时间序）
-  const line = d3.line().x(d => x(d.t)).y(d => y(d.price)).curve(d3.curveMonotoneX);
-  const path = svg.append("path")
-    .attr("d", line(data))
-    .attr("fill", "none").attr("stroke", P.ink).attr("stroke-width", 1.6)
-    .attr("opacity", 0.75);
-  const len = path.node().getTotalLength();
-  path.attr("stroke-dasharray", len).attr("stroke-dashoffset", len);
+  // ── 谷底参考线（GPT-5 2025-08）──
+  const valley = data.find(d => d.label.includes("GPT-5（"));
+  if (valley) {
+    const vl = svgEl("line", { x1: xOf(valley.t), x2: xOf(valley.t), y1: TOP - 8, y2: TOP - 8,
+      stroke: P.red, "stroke-width": 1, "stroke-dasharray": "3 4" });
+    svg.appendChild(vl);
+    animated.push({ start: 0.9, dur: 0.4, set: p => {
+      vl.setAttribute("y2", TOP - 8 + (H - BOT - TOP + 8) * p); vl.setAttribute("opacity", 0.6 * p);
+    } });
+    const vt = svgEl("text", { x: xOf(valley.t), y: TOP - 13, "text-anchor": "middle",
+      style: `font:9.5px ${MONO};fill:${P.red}` });
+    vt.textContent = "谷底 2025-08 · 此后 V 形反转";
+    svg.appendChild(vt);
+    animated.push({ start: 1.15, dur: 0.25, set: p => vt.setAttribute("opacity", p) });
+  }
 
-  // 点
+  // ── 连线（时间序，平滑单调）──
+  const pathPts = data.map(d => [xOf(d.t), yOf(d.price)]);
+  // 单调三次插值（简化：Catmull-Rom 转 Bezier）
+  let dPath = `M ${pathPts[0][0]} ${pathPts[0][1]}`;
+  for (let i = 0; i < pathPts.length - 1; i++) {
+    const p0 = pathPts[Math.max(0, i - 1)], p1 = pathPts[i], p2 = pathPts[i + 1],
+      p3 = pathPts[Math.min(pathPts.length - 1, i + 2)];
+    const c1 = [p1[0] + (p2[0] - p0[0]) / 6, p1[1] + (p2[1] - p0[1]) / 6];
+    const c2 = [p2[0] - (p3[0] - p1[0]) / 6, p2[1] - (p3[1] - p1[1]) / 6];
+    dPath += ` C ${c1[0]} ${c1[1]} ${c2[0]} ${c2[1]} ${p2[0]} ${p2[1]}`;
+  }
+  const path = svgEl("path", { d: dPath, fill: "none", stroke: P.inkMd, "stroke-width": 1.5, opacity: 0.7 });
+  svg.appendChild(path);
+  const len = path.getTotalLength();
+  path.setAttribute("stroke-dasharray", len);
+  animated.push({ start: 0.05, dur: 1.1, set: p => path.setAttribute("stroke-dashoffset", len * (1 - p)) });
+
+  // ── 点 + 标签（同日分组错位）──
   const KEY = ["o1-pro（历史峰值）", "GPT-5（旗舰谷底）", "GPT-5.5 Pro（当前峰值）"];
-  const dots = svg.append("g").selectAll("g.pt").data(data).join("g")
-    .attr("style", "cursor:pointer");
-  dots.append("circle")
-    .attr("cx", d => x(d.t)).attr("cy", d => y(d.price)).attr("r", 0)
-    .attr("fill", d => TCOL[d.tier] || P.ink)
-    .attr("stroke", P.paperHi).attr("stroke-width", 1.5);
-  // 大点击热区（透明）
-  dots.append("circle")
-    .attr("cx", d => x(d.t)).attr("cy", d => y(d.price)).attr("r", 14)
-    .attr("fill", "transparent");
-  // 标签
-  dots.append("text")
-    .attr("x", d => x(d.t)).attr("y", d => y(d.price) - 11)
-    .attr("text-anchor", "middle")
-    .attr("style", d => `font:${KEY.includes(d.label) ? "700" : "400"} 10px ${U.FONTS.mono};fill:${TCOL[d.tier] || P.ink}`)
-    .attr("opacity", 0)
-    .text(d => `${d.label.replace(/（.*）/, "")} $${d.price}`);
-  dots.append("text")
-    .attr("x", d => x(d.t)).attr("y", d => y(d.price) + 18)
-    .attr("text-anchor", "middle")
-    .attr("style", `font:8.5px ${U.FONTS.mono};fill:${P.inkLo}`)
-    .attr("opacity", 0)
-    .text(d => `${d.date} · ${TCNL[d.tier] || ""}`);
-  dots.on("click", (e, d) => U.showDrill({
-    title: d.drill.title, value: d.drill.value, sub: d.drill.sub,
-    source: d.drill.source, x: e.clientX, y: e.clientY }));
-  dots.on("mouseenter", function (e, d) {
-    d3.select(this).select("circle").attr("r", 7);
-  }).on("mouseleave", function (e, d) {
-    d3.select(this).select("circle").attr("r", 4.5);
-  });
-
-  // 图例
-  const lg = svg.append("g").attr("transform", `translate(${ML + 6}, ${TOP - 14})`);
-  Object.entries(TCNL).forEach(([k, v], i) => {
-    lg.append("circle").attr("cx", i * 86).attr("cy", -3).attr("r", 4).attr("fill", TCOL[k]);
-    lg.append("text").attr("x", i * 86 + 9).attr("y", 0)
-      .attr("style", `font:9.5px ${U.FONTS.mono};fill:${P.inkMd}`).text(v);
-  });
-
-  // 入场
-  const animated = [
-    { start: 0.05, dur: 1.1, set: p => path.attr("stroke-dashoffset", len * (1 - p)) },
-  ];
-  dots.each(function (d, i) {
-    const g = d3.select(this);
-    animated.push({ start: 0.12 + (i / data.length) * 0.9, dur: 0.25,
-      set: p => g.select("circle").attr("r", 4.5 * p) });
-    g.selectAll("text").each(function () {
-      const tEl = d3.select(this);
-      animated.push({ start: 0.2 + (i / data.length) * 0.9, dur: 0.25,
-        set: p => tEl.attr("opacity", p) });
+  const dateGroups = {};
+  data.forEach(d => { (dateGroups[d.date] = dateGroups[d.date] || []).push(d); });
+  const gidx = {};
+  data.forEach((d, i) => {
+    const gi = (gidx[d.date] = (gidx[d.date] || 0) + 1) - 1;
+    const col = TCOL[d.tier] || P.ink;
+    const S = 0.12 + (i / data.length) * 0.9;
+    const g = svgEl("g", { style: "cursor:pointer", role: "button", tabindex: "0" });
+    svg.appendChild(g);
+    g.appendChild(svgEl("circle", { cx: xOf(d.t), cy: yOf(d.price), r: 14, fill: "transparent" }));
+    const dot = svgEl("circle", { cx: xOf(d.t), cy: yOf(d.price), r: 0,
+      fill: col, stroke: P.paperHi, "stroke-width": 1.5 });
+    g.appendChild(dot);
+    animated.push({ start: S, dur: 0.22, set: p => dot.setAttribute("r", (KEY.includes(d.label) ? 5.5 : 4.5) * p) });
+    const isKey = KEY.includes(d.label);
+    const lb = svgEl("text", { x: xOf(d.t), y: yOf(d.price) - 11 - gi * 12, "text-anchor": "middle",
+      style: `font:${isKey ? "700" : "400"} 10px ${MONO};fill:${col}` });
+    lb.textContent = `${d.label.replace(/（.*）/, "")} $${d.price}`;
+    const dt = svgEl("text", { x: xOf(d.t), y: yOf(d.price) + 18 + gi * 10, "text-anchor": "middle",
+      style: `font:8.5px ${MONO};fill:${P.inkLo}` });
+    dt.textContent = `${d.date} · ${TCNL[d.tier] || ""}`;
+    [lb, dt].forEach((el, k) => {
+      g.appendChild(el); el.setAttribute("opacity", 0);
+      animated.push({ start: S + 0.08 + k * 0.04, dur: 0.22, set: p => el.setAttribute("opacity", p) });
+    });
+    g.addEventListener("mouseenter", () => dot.setAttribute("r", 7));
+    g.addEventListener("mouseleave", () => dot.setAttribute("r", isKey ? 5.5 : 4.5));
+    const open = e => U.showDrill({ title: d.drill.title, value: d.drill.value, sub: d.drill.sub,
+      source: d.drill.source, x: e.clientX, y: e.clientY });
+    g.addEventListener("click", open);
+    g.addEventListener("keydown", e => {
+      if (e.key === "Enter" || e.key === " ") { e.preventDefault(); open(e); }
     });
   });
-  U.play(animated, svg.node(), { threshold: 0.25 });
+
+  // ── 图例 ──
+  const lg = svgEl("g", {});
+  svg.appendChild(lg);
+  Object.entries(TCNL).forEach(([k, v], i) => {
+    lg.appendChild(svgEl("circle", { cx: ML + 6 + i * 96, cy: TOP - 22, r: 4, fill: TCOL[k] }));
+    const t = svgEl("text", { x: ML + 15 + i * 96, y: TOP - 18, style: `font:9.5px ${MONO};fill:${P.inkMd}` });
+    t.textContent = v;
+    lg.appendChild(t);
+  });
+  animated.push({ start: 0.3, dur: 0.3, set: p => lg.setAttribute("opacity", p) });
+
+  U.play(animated, svg, { threshold: 0.25 });
+
+  // ── 脚注：价格梯子 + 走量档最大涨幅（数据驱动）──
+  const FX = RPT.frontierExtras;
+  if (FX) {
+    const f = document.createElement("p");
+    f.style.cssText = `font:10px ${MONO};color:${P.inkMd};margin-top:8px;line-height:1.7`;
+    f.textContent = FX.ladder + (FX.volumeHike ? " " + FX.volumeHike.label + "：" + FX.volumeHike.note : "");
+    body.appendChild(f);
+  }
 })();

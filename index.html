@@ -1,277 +1,684 @@
 <!DOCTYPE html><html lang="zh-CN"><head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>AI 产业链：价值、瓶颈与缺口 · 交互研究版</title>
-<meta name="description" content="利润池 · 供需缺口 · 两层价格 · CapEx 回收 · 中国链 · 出口管制 · 反证登记册。as of 2026-07-17。"/>
+<title>AI 产业链：谁把稀缺的芯片和电力，变成了客户持续付费的服务 · 交互研究报告</title>
+<meta name="description" content="从 token 到任务：计量切换如何重写产业链的利润分配 · 交互研究报告 · 数据截至 2026-07-17"/>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@500;700;900&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@500;700;900&family=Noto+Sans+SC:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet"/>
 <link rel="stylesheet" href="css/style.css"/>
 </head>
 <body>
 
 <!-- ═══════════ 封面 ═══════════ -->
-<header id="cover">
+<header class="cover" id="cover" data-win="cover">
   <div class="cover-inner">
-    <p class="cover-kicker">AI INDUSTRY CHAIN · VALUE / BOTTLENECK / GAP · AS OF 2026-07-17</p>
-    <h1 class="cover-title">AI 产业链<br/><span class="t-blue">价值、瓶颈与缺口</span></h1>
-    <p class="cover-sub">利润池 · 供需缺口 · 两层价格 · CapEx 回收 · 中国链 · 出口管制 · 反证登记册</p>
-    <p class="cover-lede">AI 产业链的核心不再是「谁有最强模型」，而是<strong>「谁能把稀缺物理供给转化为可结算的生产力单元」</strong>；当前利润池 <strong>71.3%</strong> 在上游，供需缺口 <strong>0.70→0.97</strong> 温和收紧，价格已分两层。</p>
+    <p class="cover-kicker">AI INDUSTRY CHAIN · FROM TOKEN TO TASK</p>
+    <h1 class="cover-title">AI 产业链<br/><span class="t-ink">谁把稀缺的芯片和电力，变成了客户持续付费的服务</span></h1>
+    <p class="cover-sub">从 token 到任务：计量切换如何重写产业链的利润分配 · 交互研究报告 · 数据截至 2026-07-17</p>
+    <p class="cover-lede">AI 的需求三年翻了几百倍，利润却没有平均地落在每一个环节。这份报告用一把尺子量完整条产业链：从 token 到任务的计量切换，如何重写利润的分配。读数先摆在封面上——利润池的 <strong>71.3%</strong> 当前在半导体结算，供需缺口比从 <strong>0.70</strong> 走到 <strong>0.97</strong>，四家超大云厂商明年的资本开支指引合计近七千亿美元。往下，是全部证据。</p>
+    <div class="cover-strata" id="cover-strata"></div>
     <div class="key-band" id="key-band">
-      <div class="kb-item blue"><div class="kb-v" data-kb="share">71.3%</div><div class="kb-k">利润池上游份额（半导体层，base 情景）</div></div>
-      <div class="kb-item"><div class="kb-v" data-kb="gap">0.97</div><div class="kb-k">供需缺口比 12 个月 base 轨迹（起点 0.70）</div></div>
-      <div class="kb-item"><div class="kb-v" data-kb="ds">3.94x<span class="u"> vs </span>2.85x</div><div class="kb-k">需求增速 vs 供给增速（base，年化）</div></div>
-      <div class="kb-item blue"><div class="kb-v" data-kb="rev">$326B</div><div class="kb-k">MaaS 收入池 base 读数（年化 run-rate）</div></div>
-      <div class="kb-item red"><div class="kb-v"><span class="kb-lamp"></span>黄橙灯</div><div class="kb-k">CapEx 回收判断：四大 2026E 合计 $695-725B</div></div>
+      <div class="kb-item"><div class="kb-v" data-kb="share">71.3%</div><div class="kb-k">利润池上游份额（半导体层，base 情景）</div></div>
+      <div class="kb-item"><div class="kb-v" data-kb="gap">0.97</div><div class="kb-k">供需缺口比（起点 0.70，12 个月 base 情景轨迹）</div></div>
+      <div class="kb-item"><div class="kb-v" data-kb="ds">3.94x<span class="u"> vs </span>2.85x</div><div class="kb-k">需求增速 vs 供给增速（年化，base 情景）</div></div>
+      <div class="kb-item"><div class="kb-v" data-kb="rev">$326B</div><div class="kb-k">推理收入池（年化折算，base 情景）</div></div>
+      <div class="kb-item"><div class="kb-v" data-kb="capex">$695–725B</div><div class="kb-k">超大云厂商（微软/谷歌/亚马逊/Meta）2026 年资本开支指引合计</div></div>
     </div>
     <div class="cover-chips">
-      <button class="chip" data-goto="#sec-exec">执行摘要</button>
-      <button class="chip" data-goto="#sec-profit">利润池 71.3%</button>
-      <button class="chip" data-goto="#sec-gap">供需缺口</button>
-      <button class="chip" data-goto="#sec-price">价格两层</button>
-      <button class="chip" data-goto="#sec-capex">CapEx 黄橙灯</button>
-      <button class="chip" data-goto="#sec-gates">供给闸门</button>
-      <button class="chip" data-goto="#sec-china">中国链</button>
-      <button class="chip" data-goto="#sec-scen">出口管制三情景</button>
-      <button class="chip" data-goto="#sec-signals">反证登记册</button>
+      <button class="chip" data-goto="#cover">封面</button>
+      <button class="chip" data-goto="#sec-exec">§0 执行摘要</button>
+      <button class="chip" data-goto="#sec-task">§1 任务通胀</button>
+      <button class="chip" data-goto="#sec-meter">§2 计量战争</button>
+      <button class="chip" data-goto="#sec-price">§3 定价 V 形</button>
+      <button class="chip" data-goto="#sec-monetize">§4 变现证据</button>
+      <button class="chip" data-goto="#sec-gap">§5 供需缺口</button>
+      <button class="chip" data-goto="#sec-relay">§6 瓶颈接力</button>
+      <button class="chip" data-goto="#sec-power">§7 电力</button>
+      <button class="chip" data-goto="#sec-balance">§8 资产负债表</button>
+      <button class="chip" data-goto="#sec-pool">§9 利润池</button>
+      <button class="chip" data-goto="#sec-china">§10 中国链</button>
+      <button class="chip" data-goto="#sec-export">§11 出口管制</button>
+      <button class="chip" data-goto="#sec-verdict">§12 裁决与反证</button>
+      <button class="chip" data-goto="#sec-conclusion">§13 总结</button>
+      <button class="chip" data-goto="#sec-method">方法与来源</button>
     </div>
-    <p class="cover-anchor">交互研究版 · 每个读数可点击下钻到带日期的出处 · 全部数字回溯 ai-industry-chain dossier 的 canonical CSV 与模型读数 · 无源不画，宁缺勿编 · 仅供参考，不构成投资建议</p>
+    <p class="cover-anchor">每个读数可点击下钻到带日期的出处 · 无源不画 · 仅供参考，不构成投资建议</p>
     <div class="scroll-hint"><span></span>SCROLL</div>
   </div>
 </header>
 
 <main>
 
-<!-- ═══════════ §1 执行摘要 + 时间线事件墙 ═══════════ -->
-<section id="sec-exec" class="band">
+<!-- ═══════════ §0 执行摘要 ═══════════ -->
+<section class="band" id="sec-exec" data-win="exec">
   <div class="prose">
-    <p class="sec-no">§1 · 执行摘要</p>
-    <h2>价值在上游结算，瓶颈在物理世界</h2>
-    <p class="dek">把 2023 到 2026 的事件铺开看：需求点火、价格先崩后立、管制从芯片打到模型。<strong>三年事件墙读完，利润池、缺口、闸门三张图才有坐标。</strong></p>
-    <p>本报告是一张产业链的利润地图，不是模型能力排行榜。<b>判断先行：可结算的利润正在向稀缺的物理供给集中——算力芯片、HBM、先进封装、电力交付；模型层创造需求，尚未证明留存利润。</b>证据按四条线展开：利润池（§2）回答「钱在哪一层结算」；供需缺口（§3）回答「稀缺在加剧还是缓解」；价格两层（§4）回答「谁在提价、谁在被补贴」；CapEx 回收（§5）回答「买单的人还能撑多久」。中国链（§7）与出口管制（§8）是同一套逻辑的另两个投影面，反证登记册（§9）给出每条结论的证伪开关。</p>
+    <p class="kicker">§0 · EXECUTIVE SUMMARY</p>
+    <h2>价值在上游结算，约束在物理世界，计量正在换单位</h2>
+    <p class="dek">把 2023 到 2026 年的事件铺开看：需求点火、计量换单位、价格先崩后立、管制从芯片打到模型。<strong>三年事件墙读完，后面的每一张图才有坐标。</strong></p>
+    <p>本报告只用一把尺子：<strong>任务计量——从 token 到任务的计量切换，如何重写产业链的利润分配</strong>。判断拆成三句话。第一，钱当前在上游结算：把产业链上所有公司当季赚到的经营利润加在一起（本报告称<strong>利润池</strong>），71.3% 在半导体（base 情景）<button class="src" data-src="pp-base">◆</button>；模型层按净利润口径为 -5.8%——模型层创造了需求，利润尚未结算在这一层（需求已经被创造出来，钱还没变成利润留在这层的账上）。第二，约束在物理世界：瓶颈沿芯片、内存、先进封装、供电一棒接一棒，资本无法速成。第三，计量正在换单位：任务取代 token（AI 计费的最小单位，约相当于一个英文单词片段或一两个汉字）成为计价与利润分配的新尺子。</p>
+    <p>这份报告反复说的<strong>生产力单元</strong>，就是客户愿意按次、按任务持续付费的 AI 服务——它必须能开出账单（可结算）、能装进客户现有的工作流程（可嵌入）、能反复使用不被轻易替代（可复用）。三个限定词各对应一条证据线：可结算看任务经济与变现证据（§1–§4），可嵌入看工作流与记录系统（§4），可复用看瓶颈接力与稀缺供给（§5–§7）。</p>
+    <p>每条线先给一枚锚点：OpenAI 2025 年经营亏损 -$20.92B（审计报道口径）<button class="src" data-src="openai-loss">◆</button>；供需缺口比 0.70→0.97（base 情景，区间 0.34–2.27）<button class="src" data-src="gap-base">◆</button>——缺口比是按需求和供给各自的增长速度折算出的比值，小于 1 表示供给还追得上（紧平衡），大于 1 表示越买越缺；2025 年 11 月中旬，微软 CEO 纳德拉公开承认「芯片躺在库存里插不上电」<button class="src" data-src="nadella-warm">◆</button>；Salesforce 把一次完成的 AI 任务记为一个任务量单位，其累计披露折合 7,526 token/任务量单位——首个官方「token→任务」汇率（2026-05-27）<button class="src" data-src="sf-awu">◆</button>；美国最大电网运营商 PJM 容量拍卖连续四次触顶，2028/29 年度缺口 6,831MW（2026-07-14）<button class="src" data-src="pjm-auction">◆</button>。</p>
   </div>
   <div class="wide xl">
     <div id="chart-timeline" class="chart-frame"></div>
   </div>
   <div class="prose">
-    <p>时间线上最值得停驻的三块牌匾：<b>2025-08，GPT-5 把旗舰价格打到 $1.25 谷底</b>，市场一度宣布模型价格已崩；随后六个月发生的事情是 §4 的 V 形反转。<b>2026-06，Claude Fable 5 被行政令全球下架 19 天</b>——前沿模型第一次被当作芯片来管制，出口管制从硬件层打到了模型层。<b>2026-07-16，TSMC 在法说会上亲口说出「severely supply-constrained」</b>，封装「已成为限制客户成长的瓶颈」——供给刚性的最高级别官方确认。</p>
-    <div class="read-fa"><span class="fa-tag">读法 · §1</span>事件墙不是编年史，是论点的证物陈列：<b>每一次供给约束的官方确认（红、蓝牌匾）都对应着利润池的一次再分配。</b>后面九章，本质上是把这三块牌匾展开算账。</div>
+    <p>时间线上最值得停驻的牌匾：<b>2025-08，GPT-5 把旗舰价打到每百万 token $1.25 谷底</b>，市场一度宣布模型价格已崩；随后六个月发生的事情是 §3 的 V 形反转。<b>2026-06，前沿模型首次被行政令全球下架 19 天</b>——出口管制从硬件层打到了模型层。<b>2026-07-16，台积电在法说会（上市公司每季度向投资者说明业绩的会议）上亲口说出「severely supply-constrained」</b>，封装被点名为「限制客户成长的瓶颈」。次日，<b>中国旗舰模型集体提价</b>——「前沿档门票」全球同价。</p>
+  </div>
+  <div class="wide xl">
+    <div id="chart-mainlines" class="chart-frame"></div>
+  </div>
+  <div class="prose">
+    <div class="read-fa"><p>事件墙不是编年史，是论点的证物陈列：<b>每一次供给约束的官方确认，都对应着利润池的一次再分配。</b>后面的章节，就是把这几块牌匾展开算账。</p></div>
+    <div class="falsify"><p><strong>什么证据会推翻本章判断：</strong>本报告的每个判断都附失效条件——它们集中摆在 §12「什么证据会推翻这些判断」，任何一条越线，对应结论即应重估。</p></div>
   </div>
 </section>
 
-<!-- ═══════════ §2 利润池 ═══════════ -->
-<section id="sec-profit" class="band">
+<!-- ═══════════ §1 任务通胀 ═══════════ -->
+<section class="band" id="sec-task" data-win="task">
   <div class="prose">
-    <p class="sec-no">§2 · 利润池</p>
-    <h2>71.3%：利润在上游结算</h2>
-    <p class="dek">Reconstruction v0.5 单季读数：正利润池 $91.7B，半导体层拿走 71.3%。<strong>模型/API lab 净口径为负——需求发动机不是利润发动机。</strong></p>
-    <p>把整条链按「谁在本季结算到经营利润」切成六层，v0.5 的 base 读数是：<b>半导体 $65.33B（71.3%）、云 $10.36B（11.3%）、数据中心/电力 $8B（8.7%）、workflow 应用 $6B（6.5%）、服务 $2B（2.2%）、模型/API lab -$5B（-5.8%）。</b>半导体份额较 v0.4 微降 0.9pt——<b>这是 DC/电力与 workflow 锚点增强带来的相对稀释，不是上游变弱。</b>切换下方情景开关，看同一结构在 low / high 两端的形状：上游主导在所有情景下成立，变的只是斜率。</p>
-    <p>两层的读数值得单独点名。DC/电力/液冷是本版上修最多的一层（base $8B，high $13B），speed-to-power 证据在 2026-07 显著增强——backlog 以「年」计。模型层的 -$5B 不是失败，是未结算：OpenAI 2025 审计口径收入 $13.07B、经营亏损 -$20.92B，Anthropic run-rate 冲到 $47B——<b>模型层把需求点着了，利润留在别人的账上。</b></p>
+    <p class="kicker">§1 · TASK INFLATION</p>
+    <h2>任务通胀：需求被系统性低估</h2>
+    <p class="dek">副题：换把尺子——从 token 到任务。完成一个任务要消耗的 token 在快速膨胀，横跨 7 个数量级；「token 降价 → 需求饱和」的旧算法失效——<strong>需求的真实单位是任务，不是 token。</strong></p>
+    <div id="illu-task" class="illus-frame"></div>
+    <p>所谓<strong>任务通胀</strong>：完成一个任务要消耗的算力（token）在快速膨胀——以前一次对话几千 token，现在一个自动编程任务动辄上亿。市场共识用「token 价格 × 使用规模」量需求，读出的是「通缩即萎缩」；换成任务这把尺子，同一组数据读出的是「通胀即低估」。</p>
   </div>
   <div class="wide xl">
-    <div id="chart-profitpool" class="chart-frame"></div>
+    <div id="chart-spectrum" class="chart-frame"></div>
   </div>
   <div class="prose">
-    <div class="read-fa"><span class="fa-tag">读法 · §2</span>利润池图回答「谁在本季赚到钱」，不回答「谁的叙事最强」。<b>份额的微降是稀释不是变弱；真正的分界线在零轴——模型层什么时候转正，才是产业链利润地图下一次重画的时刻。</b></div>
+    <p>谱系从左到右跨 7 个数量级（图用<strong>对数刻度</strong>：把 1、10、100、1,000 画成等间距，方便看清跨数量级的差距）：日常对话不到 10³ token；单篇文档约 5×10³；多文档深读约 10⁵；单个<strong>智能体</strong>（能自动连续执行多步任务的 AI）任务约为对话的 4 倍、多智能体 15 倍（Anthropic 工程博客，2025-06，token 用量解释任务表现方差的 80%）<button class="src" data-src="anthropic-eng">◆</button>；自动编程任务 10⁶–10⁷ token，是单轮问答的 <b>3,500 倍</b>、多轮代码聊天的 1,200 倍，同一任务不同次运行方差最高 30 倍（斯坦福大学 2026-04 研究——单一研究、单一基准，且与旧数据集跨基线比较，引用须注明）<button class="src" data-src="spectrum-stanford">◆</button>；搭一个小型网页应用约 1 亿 token，一位研究员三周搭建工作流消耗 40 亿 token（《财经》实测，2026-06-05）<button class="src" data-src="caijing-build">◆</button>。</p>
+    <p>首个官方汇率：Salesforce 2026 财年 Q1 累计 38 亿任务量单位 / 28.6 万亿 token = <b>7,526 token/任务量单位</b>（2026-05-27，累计口径；上季为 7,917，稳定在 6.9K–7.9K 区间；任务量单位定义曾扩围、不等于计费动作，边际汇率在漂移）<button class="src" data-src="sf-awu">◆</button>。</p>
+  </div>
+  <div class="wide">
+    <div id="chart-intensity" class="chart-frame"></div>
+  </div>
+  <div class="prose">
+    <p>强度已经落到员工个人账上：一线员工日均 1,000 万–3 亿 token；产研高强度岗位 5 亿+/日；某 30 万员工巨头工程师周 token 成本 $2,000–3,000（《财经》，2026-06）<button class="src" data-src="intensity-employee">◆</button>。Uber 4 个月烧完全年 AI 预算，随后设 $1,500/人/月上限，重度使用者 $500–2,000/月（Bloomberg，2026-06-02）<button class="src" data-src="uber-budget">◆</button>。一线实测样本中，重度编程智能体使用者约 <b>7,000 万 token/天</b>，约为平均假设的 10 倍——用量呈<strong>幂律分布</strong>（少数重度使用者消耗了绝大部分算力，不能用平均值推算）<button class="src" data-src="intensity-powerlaw">◆</button>。</p>
+    <p>B 面必须同框（<strong>B 面</strong>：每个判断的反面情况——什么证据出现时，结论就要反转）：消耗中有相当比例是可压缩的浪费——生产环境 token 浪费率 30–72%（《财经》2026-04-16 实测 72%）<button class="src" data-src="waste-rate">◆</button>；Entelligence 汇总 2,444 家企业：每 $1 token 费用仅 18 美分触达终端价值；斯坦福同一研究的 B 面：token 多 ≠ 成功率高，准确率在中等成本见顶。但算术摆在这里：<b>浪费率从 70% 压到 20%，总强度乘数从 1.7 降到 1.2；只有当有效需求涨幅低于约四成（1.7/1.2）时，总消耗才会下降。</b></p>
+    <blockquote class="quote-card" data-quote="zhou"></blockquote>
+  </div>
+  <div class="prose">
+    <div class="read-fa"><p>需求被低估不是观点，是单位换算的结果：用 token 量需求，量出通缩；用任务量需求，量出通胀。<b>浪费率是唯一能让这个结论松动的变量——但它得先压掉五成，还要需求端不再涨。</b></p></div>
+    <div class="falsify"><p><strong>什么证据会推翻本章判断：</strong>浪费率大幅压缩（如 70%→20%）且有效需求涨幅低于约四成，总消耗转为下降；或自动编程任务的成功率/成本比持续恶化——任务不再值得烧这么多 token。</p></div>
   </div>
 </section>
 
-<!-- ═══════════ §3 供需缺口 ═══════════ -->
-<section id="sec-gap" class="band">
+<!-- ═══════════ §2 计量战争 ═══════════ -->
+<section class="band" id="sec-meter" data-win="meter">
   <div class="prose">
-    <p class="sec-no">§3 · 供需缺口</p>
-    <h2>3.94x 对 2.85x：缺口温和收紧</h2>
-    <p class="dek">需求端六条增长线加权合成 3.94x/年；供给端产能 1.9x × 服务速率 1.5x = 2.85x。<strong>缺口比 0.70 起步，base 路径 12 个月后 0.97——逼近 1.0，稀缺加剧、强度温和。</strong></p>
-    <p>需求端不是一个数字，是六条有锚的增长线：<b>中国 MaaS 以 55% 的权重、4.0x 的 base 增速成为第一承重项</b>（豆包日均 token 同比 +10x、近三个月翻倍）；<b>coding agent 是斜率最陡的一极（base 8.0x）</b>——Codex 周活 5 个月 8x，agentic 单任务 token 消耗是聊天的 15x-1000x。第一张图把每条线的权重（条长）与增速（右侧色阶标记）摆在一起，悬停可看每条线对 base 增长的贡献份额。</p>
-    <p>供给端在 2026-07-17 做了硬化处理：存量约 15-20M H100 当量，2026 年新增约 14-16M 颗；<b>服务速率维持 Google 校准的 1,600 tok/s，MLPerf 峰值只作上界不打进 base</b>。第二张图是从 0.70 出发的三条路径——tightening 2.27（红）、base 0.97（蓝）、loosening 0.34（灰），1.0 参考线之上才是真正意义上的「越买越缺」。</p>
+    <p class="kicker">§2 · THE METERING WAR</p>
+    <h2>计量战争：谁定义「一个任务」，谁就收租</h2>
+    <p class="dek">计费单位正从 token 转向任务，市场收敛为三层——底层按量付费、中层按任务量计费、顶层席位捆绑。<strong>当前赢家是混合制，而非纯按结果计费。</strong></p>
+    <div id="illu-meter" class="illus-frame"></div>
+    <p>所谓<strong>计量战争</strong>，争的是按什么单位收费——按 token、按任务、按席位；谁定义了计费单位，谁就掌握了定价权。「有没有单列的 AI 收入」与「按什么单位收费」是同一个问题。三层站位正在收敛：<b>底层按量付费</b>——GitHub Copilot 2026-04-27 宣布、06-01 生效，订阅改按 AI 点数计费（$0.01/点数）<button class="src" data-src="github-points">◆</button>；<b>中层按任务量计费</b>——Salesforce 每个动作 $0.10（官方披露）；Intercom Fin $0.99/次解决、Zendesk $1.50–2.00/次核实解决、Sierra 纯按结果计费年化收入超 $1 亿（三家定价均为券商研究口径，待核，明细见下钻卡）<button class="src" data-src="task-pricing">◆</button>；<b>顶层席位捆绑</b>——Microsoft E7 $99/席/月（2026-05-01 上线；「实际仅省约 3% 而非宣称 15%」为券商研究口径，待核），Copilot Chat 2026-07-01 并入基础套件<button class="src" data-src="msft-e7">◆</button>。</p>
+    <blockquote class="quote-card" data-quote="github"></blockquote>
   </div>
   <div class="wide xl">
-    <div id="chart-growth" class="chart-frame"></div>
-  </div>
-  <div class="wide xl">
-    <div id="chart-gap" class="chart-frame"></div>
+    <div id="chart-metering" class="chart-frame"></div>
   </div>
   <div class="prose">
-    <blockquote class="quote-card" data-quote="nadella"></blockquote>
-    <p>「warm shells」是第一手的约束证词：<b>短缺的正在从芯片变成「有电可插的壳体」</b>。这正是供给端合成只给 2.85x 的物理原因——产能增速与服务速率增速相乘，中间隔着 HBM、封装、并网三道实体闸门（§6）。</p>
-    <div class="read-fa"><span class="fa-tag">读法 · §3</span>缺口模型的两个第一敏感假设都摆在图上：<b>中国 MaaS 的口径（含 cache，未核验）与 coding agent 的 8.0x 斜率。</b>0.97 是温和收紧，不是失控——它支持「稀缺加剧」的定价判断，不支持「泡沫即破」的恐慌判断。</div>
+    <p>市场共识说「席位制已死、按结果计费必胜」。证据不支持逆转：Futurum 调查（830 家受访，偏好口径非实际采用）显示按结果计费偏好 21.7% vs 席位 20.1%——<b>持平未逆转</b>；同机构其他口径给出 30%/43% 偏好按量计费，「持平」读数对问卷措辞高度敏感<button class="src" data-src="futurum-survey">◆</button>。Agentforce 订单 60%+ 仍来自老客户席位扩张。计量漂移也在发生：Salesforce 的 token 环比 +152% 快于任务量单位 +111%——边际汇率在漂移，且任务量单位口径曾扩围<button class="src" data-src="metering-drift">◆</button>。</p>
+  </div>
+  <div class="wide xl">
+    <div id="chart-precedents" class="chart-frame"></div>
+  </div>
+  <div class="prose">
+    <p>计量战争不新鲜，六个先例摆在时间轴上：1897 年芝加哥爱迪生的两部制电价；1959 年施乐按张计费（$95/月 + 超量每张 4 美分，三年收入 $40M→$400M）；1968 年 GE 分时服务局占 40% 后消亡；1996 年 AOL $19.95 包月；MoviePass $9.95/月（月均 2.11 部即必亏）；电信流量包月的悔意（2017 年 Verizon 重启不限量 → 2026 年 Airtel 自述「定价架构坏了」）<button class="src" data-src="precedents">◆</button>。<b>每一次计量切换，都是定价权的一次易手。</b></p>
+  </div>
+  <div class="wide">
+    <div id="chart-subsidy" class="chart-frame"></div>
+  </div>
+  <div class="prose">
+    <p>补贴可以量化：$200/月的 ChatGPT Pro 拉满使用约等于 <b>$14,000/月 API 等效（70 倍）</b>；Claude Max 约 $8,000（40 倍）；最高档利用率约 5.7% 即零毛利，Anthropic 最高档约 10%、Plus/Pro 5x 档 11.4%（SemiAnalysis 2026-06 测算口径——标价不等于成本，真实补贴深度必小于 70 倍，属其测算口径下的理论上限）<button class="src" data-src="subsidy-70x">◆</button>。</p>
+    <div class="read-fa"><p>混合制赢的原因写在补贴数字里：纯按量收费会把重度使用者吓跑，纯席位制会被重度使用者吃垮——<b>把轻使用者放进席位、把重使用者赶到计量表上，是当前唯一的均衡。</b></p></div>
+    <div class="falsify"><p><strong>什么证据会推翻本章判断：</strong>按结果计费偏好持续过半且席位续费率崩坏；任务量口径被厂商扩围稀释到失去计费意义（口径扩围已发生过一次）；或中间层被按量与席位上下两头挤压消失。</p></div>
   </div>
 </section>
 
-<!-- ═══════════ §4 价格两层 ═══════════ -->
-<section id="sec-price" class="band">
+<!-- ═══════════ §3 定价的 V 形反转 ═══════════ -->
+<section class="band" id="sec-price" data-win="price">
   <div class="prose">
-    <p class="sec-no">§4 · 价格两层</p>
-    <h2>V 形反转：价格分成了两层</h2>
-    <p class="dek">2025-08 GPT-5 把旗舰打到 $1.25 谷底；此后前沿档量价齐升，走量档量升价跌。<strong>「模型价格崩了」是上一季的故事，这一季的故事是分层。</strong></p>
-    <p>第一张图是旗舰/超档的完整轨迹：o1-pro 的 $150 是历史峰值，GPT-5 的 $1.25 是谷底——GPT-4 发布价 $30 到 GPT-5 $1.25，29 个月 24x，市场就在那一刻宣布价格崩盘。<b>随后是 V 形反转：Anthropic 在 Opus 之上新开 Mythos 超档 $25，OpenAI 开出 GPT-5.5 Pro $30——当前最贵 API 档。</b>点与点之间没有插值承诺，每个点都是一次官方定价事件。</p>
-    <p>第二张图是中国旗舰的台阶：Kimi K2 $0.6 → K2.6 $0.95 → K3 $3，<b>追赶前沿的代价是守不住价格——K3 定价已是 K2 的 5 倍</b>；Qwen 约 2x 并转闭源。唯一的结构性例外是 DeepSeek：牌价涨 6 倍、靠永久 75 折稳住实付，独守走量档。两条曲线一张一弛，正是 C/F 两层的活体样本。</p>
+    <p class="kicker">§3 · THE V-SHAPED REVERSAL</p>
+    <h2>V 形反转：旗舰价连续多代上移，价格分成两层</h2>
+    <p class="dek">2025-08 GPT-5 把旗舰价打到每百万 token $1.25 谷底；此后旗舰价连续多代上移，当前在售旗舰按输入价已是谷底的 4 倍。<strong>「模型价格崩了」是上一季的故事，这一季的故事是分层。</strong></p>
+    <div id="illu-pricetag" class="illus-frame"></div>
+    <p>所谓 <strong>V 形反转</strong>：价格先跌到谷底、再掉头向上的轨迹，形状像字母 V。先看天花板的完整轨迹（价格单位：美元/百万 token，输入/输出）：GPT-4o $5/$15（2024-05）→ o1 $15/$60 → GPT-4.5 $75/$150（2025-02）→ o1-pro <b>$150/$600</b>（2025-03 历史峰值）→ o3-pro $20/$80（2025-06，天花板回落约 87%）→ Opus 4.6 Fast $30/$150（2026-02）→ <b>GPT-5.5 Pro $30/$180（2026-04，当前在售旗舰最高挂牌）</b><button class="src" data-src="frontier-ceiling">◆</button>。常规旗舰走 V 形：GPT-5 $1.25/$10（2025-08 谷底）→ 后续逐代上移 → 5.5/5.6 Sol $5/$30（2026-04/07，<b>按输入价为谷底 4 倍</b>、按输出价 3 倍）；中间一代 $2.50/$15 的型号发布日未经核验，不标日期<button class="src" data-src="frontier-v">◆</button>。价格梯子向两端拉长：<b>输入价口径 600 倍，输出价口径 450 倍</b>。</p>
+    <blockquote class="quote-card" data-quote="techcrunch"></blockquote>
   </div>
   <div class="wide xl">
     <div id="chart-frontier" class="chart-frame"></div>
+  </div>
+  <div class="prose">
+    <p>走量档也在提价：Google Flash 档 $0.30/$2.50 → $0.50/$3 → <b>$1.50/$9</b>（Gemini 3.5 Flash，2026-05-19）——输入价 11 个月 5 倍，为全场最大涨幅<button class="src" data-src="flash-price">◆</button>。中国厂商集体提价：Kimi K2 $0.60/$2.50（2025-07）→ K2.6 $0.95/$4.00（2026-04-20）→ <b>K3 $3/$15（2026-07-16/17，输入价为 K2 的 5 倍、输出价 6 倍）</b>；Qwen3-Max $1.2 → Qwen3.7-Max $2.50；GLM 年内三次调价<button class="src" data-src="kimi-k3">◆</button>。追赶前沿的代价是守不住价格。</p>
+    <p>唯一的结构性例外是 DeepSeek：V4 Pro 牌价 $1.74/$3.48 挂 75% 折扣、实付 $0.435/$0.87（折扣已事实长期化）；2026-04-26 缓存命中价永久降为原价十分之一；官方称国产芯片量产后还将大幅降价——<b>牌价涨、实付稳，守住最低价档</b><button class="src" data-src="deepseek-discount">◆</button>。中美价差定位：K3 仍只有 GPT-5.6 Sol 的六成、Anthropic 新一代旗舰的三成。隐性涨价也在发生：Claude Sonnet 5（2026-06-30）新分词器使同样文本多产出 1.0–1.35 倍 token；推理模型的输出 token 膨胀（Simon Willison 实测：Gemini 3.5 Flash 跑同一评测花 $1,551 vs 前代 Pro $892）<button class="src" data-src="hidden-inflation">◆</button>。</p>
   </div>
   <div class="wide xl">
     <div id="chart-chinafrontier" class="chart-frame"></div>
   </div>
   <div class="prose">
-    <p>两层机制的参数摆在下方的对比卡里：<b>C 层（走量档）牌价锚 $1.5、折扣打到 0.3-0.7、年降幅 -60~-80%，Jevons 成立——量升价跌、收入池持平；F 层（前沿档）牌价锚 $12、折扣仅 0.6-0.9、12 个月 -20%~+50%，V 形反转后量价齐升。</b>同一枚 token，两种价格纪律。</p>
+    <p>两层机制的参数摆在对比卡里：<b>走量档牌价锚 $1.5/百万 token、折扣打到 0.3–0.7、年降 60–80%——Jevons 效应成立</b>（用得越便宜、用得越多，总支出反而不降，19 世纪经济学家在煤炭上发现的现象）；<b>前沿档牌价锚 $12、折扣仅 0.6–0.9</b>，V 形反转后量价齐升<button class="src" data-src="pricetier-params">◆</button>。同一枚 token，两种价格纪律。把两层各自乘以量，得到推理收入池：基准 <b>$326B</b>（区间 $241B–$411B，本报告测算）<button class="src" data-src="revpool">◆</button>。这个读数自带一条对账纪律：可识别锚点合计约 $150–200B+，基准读数偏高 1.5–2 倍——主因是走量档有效价对中国补贴型模型服务偏贵。<b>我们对自家模型的价格假设保持同样的怀疑。</b></p>
   </div>
   <div class="wide">
     <div id="chart-pricetier" class="chart-frame"></div>
   </div>
   <div class="prose">
-    <p>把两层各自乘以量，得到 MaaS 收入池：当前 base <b>$325.9B</b>（low $240.8B / high $411.0B）。这个读数自带一条对账纪律：可识别锚点合计约 $150-200B+，base 偏高 1.5-2x——主因是 C 层有效价对中国补贴型 MaaS 偏贵。<b>我们对自家模型的价格假设保持同样的怀疑。</b></p>
-    <div class="callout-red">
-      <span class="co-tag">自校验发现 · 下季第一裁决问题</span>
-      <p>12 个月自校验：C 层 $99.6B → $105.8B（量升价跌对冲，Jevons 成立）；<b>F 层 $226B → $1,366B 不可能成立——coding 线 8x 增速与 F 价格持平必有一错。</b>这是下季度财报季要裁决的第一问题。</p>
-    </div>
+    <p>自校验必须公开：走量档 12 个月外推 $99.6B → $105.8B（量升价跌对冲，Jevons 成立）；但前沿档按「用量 8 倍 + 价格持平」外推，年收入将从 $226B 冲到 <b>$1.366 万亿——本报告判断此处必有一错：要么编程智能体用量增速下台阶，要么前沿档价格扛不住</b>（本报告测算）<button class="src" data-src="fcheck-warning">◆</button>。两个方向的证据已在 §12 列出。</p>
   </div>
-  <div class="wide xl">
-    <div id="chart-revenuepool" class="chart-frame"></div>
+  <div class="wide">
+    <div id="chart-fcheck" class="chart-frame"></div>
   </div>
   <div class="prose">
-    <div class="read-fa"><span class="fa-tag">读法 · §4</span>价格分层的投资含义不对称：<b>C 层赚流量的钱、F 层赚稀缺的钱。</b>中国旗舰涨价说明「前沿档门票」全球同价；而 F 层 $1,366B 的投影既然不成立，要么 coding 增速下台阶（F-05），要么 F 有效价扛不住——两条路径都已被写进反证登记册。</div>
+    <div class="read-fa"><p>价格分层的含义不对称：<b>走量档赚流量的钱，前沿档赚稀缺的钱。</b>中国旗舰集体提价说明「前沿档门票」全球同价——能用更低成本做出前沿能力的厂商，拿到的是定价权而不是降价义务。</p></div>
+    <div class="falsify"><p><strong>什么证据会推翻本章判断：</strong>前沿档价格被编程智能体放量压回（自校验矛盾的另一解）；DeepSeek 式长期折扣扩散至旗舰档；分词器与推理输出膨胀被厂商或监管明示化、计入标价。</p></div>
   </div>
 </section>
 
-<!-- ═══════════ §5 CapEx 回收 ═══════════ -->
-<section id="sec-capex" class="band">
+<!-- ═══════════ §4 变现证据 ═══════════ -->
+<section class="band" id="sec-monetize" data-win="monetize">
   <div class="prose">
-    <p class="sec-no">§5 · CapEx 回收</p>
-    <h2>$695-725B：黄橙灯</h2>
-    <p class="dek">四大云商 2026E 资本开支合计 $695-725B（+~70%），对照 2025 年的 $412.9B。<strong>需求锚点干净程度不一：这是本报告唯一的黄橙灯判断。</strong></p>
-    <p>逐家看：Microsoft 2026 共识约 $190B，FY27 指引是最大惊喜风险；Alphabet 指引 $180-190B，Cloud +63%、backlog $462B，需求锚最干净；<b>Amazon 约 $200B，但 Q1 现金 capex $44.2B（+77%）已越过当季经营现金流——现金压力最高；</b>Meta 指引 $125-145B（4 月上调），Q1 实际仅 $19.8B——后置爬坡，兑现压力留到下半年。</p>
-    <p>判断给得很明确：<b>黄橙灯。</b>Microsoft / Alphabet 的需求锚点较干净；Amazon 单季 PPE 超 OCF、commitments 最高，是四家之中最紧的一张资产负债表；Meta 的 AI 收入不披露，爬坡后置。市场共识锚 $725B，下一验证窗是 2026-07-22~29 的财报季。</p>
+    <p class="kicker">§4 · MONETIZATION EVIDENCE</p>
+    <h2>变现证据：有人开始按任务收钱，毛利还没被证明</h2>
+    <p class="dek">「口径即观点」——能明确归因到一个独立 AI 产品的收入（<strong>单独定价的 AI 产品</strong>）、受 AI 带动但未单独计费的收入、无披露，三档分层本身就是证据。</p>
+    <div id="illu-bill" class="illus-frame"></div>
+    <p>第一档，单独定价并核算：Salesforce Agentforce 年化收入（按当前收入速度折算的一年收入）<b>$1.2B，同比 +205%</b>（2026 财年 Q1，截至 2026-04-30；与 Data 360 合并年化收入约 $3.4B；本报告利润池测算对 Agentforce 按 $1B 保守口径取值，两口径并列）<button class="src" data-src="agentforce-arr">◆</button>；ServiceNow 年度合同额目标从 $1.0B 上调至 <b>$1.5B</b>，$1M+ 年度合同额客户同比 +130%，续费率 97%<button class="src" data-src="sn-nowassist">◆</button>；微软整体 AI 业务年化收入 <b>$37B（+123%）</b>，M365 Copilot 付费席位超 2,000 万（媒体测算隐含席位收入约 $7.2B 年化）<button class="src" data-src="msft-ai-arr">◆</button>；Adobe AI 优先产品年化收入 &gt;$500M（约 3 倍）；Workday AI 年化收入接近 $500M（智能体新签年度合同额同比 +200%）<button class="src" data-src="adobe-workday">◆</button>；阿里云 AI 产品季度收入 <b>89.71 亿元</b>（占云外部商业化收入 30%，连续 11 个季度三位数增长；其中模型租用服务（百炼）——按调用量付费的 AI 模型服务，如 OpenAI API、阿里百炼——年化收入 &gt;80 亿元）<button class="src" data-src="aliyun-ai">◆</button>。第二档，受 AI 带动但未单独计费：WPS AI 月活 8,013 万（+307%）但无 AI 单独收入。第三档，无披露：SAP「仍处早期」、Oracle（AI 收入集中在云基建）、HubSpot、Zoom、monday、金山。腾讯是另一种诚实：AI 新品拖累单季经营利润约 <b>88 亿元</b>（剔除 AI 新品 844 亿 +17% vs 含 AI 756 亿 +9%）<button class="src" data-src="tencent-ai-drag">◆</button>。增速横条对照：Agentforce +205% / 微软 +123% / Palantir +85% / 讯飞星火 API +263%；Claude Code 年化收入 $2.5B（Reuters 2026-02，$1M+ 客户超 1,000、两月翻倍）。</p>
+  </div>
+  <div class="wide xl">
+    <div id="chart-sku" class="chart-frame"></div>
+  </div>
+  <div class="prose">
+    <p>收到钱 ≠ 赚到钱。把 Agentforce 的单位经济拆成<strong>毛利桥</strong>（从收入开始，逐项扣减成本费用，一直拆到最后的利润）：每任务收入三情景 $0.80 / $0.40 / $0.16，每任务成本 $0.75 / $0.75 / $0.1125（悲观收入情景换用更便宜的模型组合与更高成功率）→ 毛利率 <b>+6.3% / -87.5% / +29.7%</b>，年利润 proxy +$0.05B / -$0.70B / +$0.24B（任务量为假设，随图注披露；三情景成本假设全部列出，可复算）<button class="src" data-src="grossbridge">◆</button>。对照 ServiceNow 模式：基准 +60% / +$0.55B。<b>基准情景下单位任务毛利 -87.5%</b>——收到钱的第一年，很可能还没赚到钱。</p>
+  </div>
+  <div class="wide">
+    <div id="chart-grossbridge" class="chart-frame"></div>
+  </div>
+  <div class="prose">
+    <p>任务本身的成本横跨 5 个数量级：简单客服任务在最便宜档位仅 <b>$0.0004</b>；旗舰模型跑多步智能体任务基准约 <b>$2.5/任务</b>，高开销组合可到 $25（按官方牌价，本报告测算）<button class="src" data-src="taskcost-basket">◆</button>。这意味着：只有记录系统级工作流 + 低复核成本 + 高成功率 + 明确付费单位同时成立，应用层才留得住毛利。</p>
+  </div>
+  <div class="wide">
+    <div id="chart-taskcost" class="chart-frame"></div>
+  </div>
+  <div class="prose">
+    <p>渗透率是另一面警示：券商估 Agentforce 付费客户约 9,500，约等于 15 万客户基数的 <b>6%</b><button class="src" data-src="penetration-6pct">◆</button>——$1.2B 年化收入与约 6% 的付费渗透率并存，两个读数都是真的。</p>
+  </div>
+  <div class="wide">
+    <div id="chart-penetration" class="chart-frame"></div>
+  </div>
+  <div class="prose">
+    <div class="read-fa"><p>口径分层即观点：敢说「单独定价 AI 产品收入」的公司，才是真的按任务收到钱的公司；「受 AI 带动」是光环，不是账单。<b>毛利桥给出的提醒更冷：基准情景下，收钱的速度还追不上烧钱的速度。</b></p></div>
+    <div class="falsify"><p><strong>什么证据会推翻本章判断：</strong>AI 产品采用增长但续费率、年度合同额、毛利不改善；或单独定价产品的付费渗透率在 2026 全年仍停留个位数——那就说明「按任务收钱」只是头部案例的孤证。</p></div>
+  </div>
+</section>
+
+<!-- ═══════════ §5 供需缺口 ═══════════ -->
+<section class="band" id="sec-gap" data-win="gap">
+  <div class="prose">
+    <p class="kicker">§5 · SUPPLY-DEMAND GAP</p>
+    <h2>3.94x 对 2.85x：缺口温和收紧，方向由中国模型服务一线决定（base 情景）</h2>
+    <p class="dek">不做点预测，只回答「需求与供给谁跑得更快」。base 情景需求年化增长 3.94x 仍快于供给 2.85x，12 个月缺口比从 0.70 升至 0.97：<strong>稀缺在加剧，但强度温和。缺口比小于 1 等于紧平衡，不等于短缺。</strong></p>
+    <div id="illu-scale" class="illus-frame"></div>
+    <p>这是全报告的定量中枢，也是任务经济四章的收口。与市场「严重短缺 / 即将过剩」二元叙事的差异：<b>给区间不给点值，并把结论翻转开关印在读数旁</b>。三情景（本报告测算）：收紧情景需求 6.22x vs 供给 1.92x → 缺口比 0.70→<b>2.27</b>；base 3.94x vs 2.85x → 0.70→<b>0.97</b>；放松情景 2.15x vs 4.40x → 0.70→<b>0.34</b><button class="src" data-src="gap-base">◆</button>。</p>
+  </div>
+  <div class="wide xl">
+    <div id="chart-gap" class="chart-frame"></div>
+  </div>
+  <div class="prose">
+    <p>需求端不是一个数字，是六条有<strong>锚点</strong>的增长线（锚点：有官方数据支撑的已知事实，模型从这里出发推算；「无官方数据」即只能靠模型估计的部分）。权重 × base 增速：消费聊天/搜索 20%×2.0x；<b>中国模型租用服务 55%×4.0x——最大权重，也是承重假设</b>（对结论贡献最大的那个假设：它一动，结论就动）；全球 API 9%×5.0x；编程智能体 8%×8.0x（最快增速）；企业工作流 1%×5.0x；无官方数据残差 6%×3.0x（六线权重显示为整数，合计 99% 是显示舍入）<button class="src" data-src="growthlines-weights">◆</button>。各线对 base 增速的贡献份额：中国模型服务 <b>56.3%</b> / 编程智能体 <b>15.4%</b> / 全球 API 11.5% / 消费 10.3% / 残差 4.8% / 企业 1.6%<button class="src" data-src="growth-contrib">◆</button>。</p>
+  </div>
+  <div class="wide xl">
+    <div id="chart-growthlines" class="chart-frame"></div>
+  </div>
+  <div class="prose">
+    <p><b>结论翻转开关</b>摆在明处：中国模型服务一线 base 增速 4.0x 若砍半到 2.0x，需求增速 3.94x→2.83x，低于供给 2.85x——<b>结论立即翻转为缺口缓解</b>（本报告测算，算术经复核成立）<button class="src" data-src="gap-killswitch">◆</button>。拖动滑块，看结论如何变化。</p>
+  </div>
+  <div class="wide">
+    <div id="chart-sensitivity" class="chart-frame"></div>
+  </div>
+  <div class="prose">
+    <p>需求锚点（均为已落地公开事实）：Google 全平台 token 处理量 9.7T/月（2024）→ 480T（2025-05）→ 1.3Q（2025-10）→ <b>3.2Q/月</b>（2026-05，同比约 7 倍；近 7 个月年化约 4.7 倍——锚点在减速，引用须带减速限定；1Q = 1 千万亿）<button class="src" data-src="anchor-google">◆</button>。豆包日调用量 12.7T（2025-03）→ 50T（2025-12）→ 120T（2026-03）→ <b>180T/天（2026-06）</b>：同比 +10 倍（2026-06-23 火山引擎官方）；近 3 个月 +50%（年化约 5 倍），较 2025-12→2026-03 的 2.4 倍/季明显减速<button class="src" data-src="anchor-doubao">◆</button>。Anthropic 年化收入 $1B（2024-12）→ $14B（2026-02）→ $30B（2026-04）→ <b>$47B（2026-05），17 个月 47 倍</b>（管理层口径，未经审计；与云厂商分成口径未拆）<button class="src" data-src="anchor-anthropic">◆</button>。OpenAI API 每分钟 6B token（两年 20 倍）。Codex 周活 0.6M（2026-01）→ 5M+（2026-06）→ 接近 1,000 万（匿名社交账号泄露，未独立核验）<button class="src" data-src="anchor-codex">◆</button>。</p>
+  </div>
+  <div class="wide xl">
+    <div id="chart-anchors" class="chart-frame"></div>
+  </div>
+  <div class="prose">
+    <p>供给端：行业估算全球加速器存量约 1,500–2,000 万颗 <strong>H100 当量</strong>（以英伟达 H100 芯片的算力为统一单位折算，方便比较不同年代、不同型号的芯片总量）；2026 年新增约 1,400–1,600 万颗（NVIDIA 约 750 万 + 自研芯片 700–900 万，摩根大通）<button class="src" data-src="supply-add">◆</button>；HBM（高带宽内存，AI 芯片必备的高速内存，目前全球只有三家公司能造）位元需求 +88%（UBS）；先进封装（把多颗芯片封装在一起协同工作的工序，AI 芯片绕不开）产能年增约 80–100%（台积电）<button class="src" data-src="supply-hbm">◆</button>。强度乘数：推理模式单次请求约 10 倍 token；智能体多步循环单任务 15–1000 倍；推理输出长度年增约 5 倍。第三方对照：Exponential View 估全球 &gt;30Q/月、同比 +14 倍；高盛估 2030 年 120Q/月<button class="src" data-src="thirdparty-demand">◆</button>。</p>
+    <div class="read-fa"><p>0.97 是温和收紧，不是失控：<b>它支持「稀缺加剧」的定价判断，不支持「泡沫即破」的恐慌判断。</b>方向由一条线决定——占 55% 权重的中国模型服务；所以读数旁永远印着那个开关。</p></div>
+    <div class="falsify"><p><strong>什么证据会推翻本章判断：</strong>中国模型服务一线增速砍半（结论翻转开关）；官方用量增速连续两季下台阶；NVIDIA/台积电出货大幅偏离模型假设；GPU 租赁价格趋势性反转。</p></div>
+  </div>
+</section>
+
+<!-- ═══════════ §6 瓶颈接力 ═══════════ -->
+<section class="band" id="sec-relay" data-win="relay">
+  <div class="prose">
+    <p class="kicker">§6 · THE BOTTLENECK RELAY</p>
+    <h2>瓶颈接力：稀缺利润沿 GPU→内存→先进封装→电力单向迁移</h2>
+    <p class="dek">瓶颈不会消失，只会迁移；迁移方向单向，由三条规律驱动——单卡内存容量上限持续抬升、有没有绕行方案决定瓶颈硬度、超额利润随棒走且强周期化。<strong>电力设备链当前的位置，类似 2023 年的先进封装。</strong></p>
+    <div id="illu-rack" class="illus-frame"></div>
+    <p>所谓<strong>瓶颈接力</strong>：瓶颈像接力棒一样在环节之间传递，一棒缓解、下一棒接棒。<b>第一棒 GPU（2022 末–2023）</b>：H100 物料成本约 $3,320，终端售价 $25,000–30,000，<b>加价约 7.5–9 倍</b>（Raymond James，2023-08）；交期峰值约 52 周；NVIDIA 毛利率 FY2023 56.9% → FY2024 72.7% → FY2025 75.0% → FY2026 约 71.1%（换代期回落）；数据中心收入 $15B→$47.5B（+217%）<button class="src" data-src="nvda-h100-markup">◆</button>。<b>第二棒 HBM（2024–）</b>：SK hynix 2024 全部售罄、2025「几乎售罄」（CEO，2024-05-02，Reuters）；2023 年营业亏损 7.7 万亿韩元 → 2025 年营收 97.15 万亿（+46.8%）、营业利润 <b>47.2 万亿（利润率 49%，Q4 单季 58% 创纪录）</b>，年度营业利润首超三星；2026-07-10 纳斯达克 IPO 募资 265 亿美元、7 倍超购<button class="src" data-src="skhynix-2025">◆</button>；Micron 2026 年 HBM 售罄、2027 年 HBM4 全订完（2026-06-24）<button class="src" data-src="micron-hbm">◆</button>。</p>
+    <p><b>第三棒先进封装（2023–）</b>：台积电 CoWoS（台积电的先进封装技术，把多颗芯片封装在一起协同工作——AI 芯片绕不开的一道工序）月产能 2022 约 1 万片 → 2023 底 11,000 → 2024 底 35,000–40,000 → 2025 底 65,000–80,000 → 2026 约 70,000–93,000 → 2027 向 12–13 万片/月爬坡（各口径分歧大，须注明）；2026 年需求约 100 万片/年，NVIDIA 占约 60%<button class="src" data-src="cowos-capacity">◆</button>；台积电 Q1 2026 毛利率 66.2%、资本开支上调至 $60–64B。<b>第四棒电力（2025 下半年–）</b>：标志事件是 2025 年 11 月中旬纳德拉公开承认「芯片躺在库存里插不上电」——供给刚性（产能短期内加不出来，即使价格涨了，供给也跟不上）从晶圆厂移到了电网，详见 §7。</p>
+    <blockquote class="quote-card" data-quote="wei"></blockquote>
+  </div>
+  <div class="wide xl">
+    <div id="chart-relay" class="chart-frame"></div>
+  </div>
+  <div class="prose">
+    <p>三条规律的证据。其一，单卡内存容量上限持续抬升：H100 80GB → H200 141GB → B200 192GB（8 TB/s）→ Rubin 288GB HBM4（22 TB/s）→ Rubin Ultra 1TB HBM4e（4.6 PB/s，单柜 600kW，2027 下半年）<button class="src" data-src="hbm-stack">◆</button>——每一代加速器主动抬高对下一环节的需求上限，所以瓶颈单向迁移。其二，绕行决定硬度：Intel 的替代性封装方案 EMIB 已由 Amkor 在韩国/葡萄牙/亚利桑那高量产（2025-12）；拿不到 CoWoS 的客户转向日月光/矽品等替代封装（2026-07-13）<button class="src" data-src="emib-osat">◆</button>。其三，价格二次冲高与周期化：HBM4 2027 年合约价或「数倍」上涨（TrendForce）；SK hynix 以 5 年以上长约锁定 60–70% 量价（UBS，2026-07-07）；汇丰估 2026 年 HBM 供给缺口约 8%（该机构另有 2026→2027 缺口路径 6%→9% 的口径，两数来自同一机构不同报告，并列待核）；Gartner 估 2026 年内存成本 +130%；存储周期史上没有大块产能软着陆的先例<button class="src" data-src="hbm-cycle">◆</button>。晶圆损耗两个口径并列：每 GB HBM 的晶圆消耗约为 DDR5 的 3 倍；1GB HBM 的晶圆面积当量约等于 4GB 普通 DRAM；TrendForce 估 2026 年 AI 占全球 DRAM 晶圆产能约 20%。</p>
+  </div>
+  <div class="wide">
+    <div id="chart-hardness" class="chart-frame"></div>
+  </div>
+  <div class="prose">
+    <p>B 面必须同框：TrendForce（2026-06-02）称 2026 年一季度起，<b>HBM 每片晶圆的收入已被普通服务器内存条（DDR5 RDIMM）反超——HBM 利润率已低于高端服务器 DRAM</b><button class="src" data-src="hbm-ddr5-flip">◆</button>。这是刚性排序里唯一出现的松动信号。</p>
+  </div>
+  <div class="wide">
+    <div id="chart-hbm" class="chart-frame"></div>
+  </div>
+  <div class="prose">
+    <div class="read-fa"><p>接力图反着读：<b>越往下，绕行越多、超额利润越薄；越往上，越接近「无绕行定价权」。</b>每一代加速器主动抬高对下一环节的需求上限，所以瓶颈只迁移、不消失——上游赢家不是永久赢家，按棒择时比择股重要。</p></div>
+    <div class="falsify"><p><strong>什么证据会推翻本章判断：</strong>HBM/先进封装合同价转跌 + 交期缩短 + 库存上升 + 锁量减少（至少两类同现），上游稀缺利润降级为周期性风险；「HBM 晶圆收入被普通内存条反超」已经发生了第一条裂缝，须并列盯着。</p></div>
+  </div>
+</section>
+
+<!-- ═══════════ §7 电力 ═══════════ -->
+<section class="band" id="sec-power" data-win="power">
+  <div class="prose">
+    <p class="kicker">§7 · THE POWER CONSTRAINT</p>
+    <h2>电力：唯一资本无法速成的约束</h2>
+    <p class="dek"><strong>通电速度</strong>（speed-to-power，从申请并网到实际用上电的时间）取代资金成为数据中心第一约束——并网排队中位 5 年、关键设备交期 2.5–5 年、2026 年计划项目 30–50% 预计延期。</p>
+    <div id="illu-power" class="illus-frame"></div>
+    <p>市场共识说「电力不就是钱的问题」。拆开看：<b>发电成本不稀缺与区域通电速度稀缺，可以同时成立</b>——电力成本 $1,500→$3,500/kW 只使每 GPU 小时成本 +~$0.10，但你买不到排队号。芯片瓶颈 24 个月内从 52 周收敛到 6–16 周，电力瓶颈纹丝不动——可资本化与不可速成的剪刀差。证据：劳伦斯伯克利国家实验室统计，美国并网排队 2024 年底约 <b>2,290GW</b>（1,400GW 发电 + 890GW 储能，约 10,300 个项目），2025 年底降至 2,061GW（-10%）；建成项目中位等待 <b>5 年</b>（2000–2007 年不足 2 年）；2000–2019 年入队容量仅约 13% 建成、约 77% 撤回<button class="src" data-src="lbnl-queue">◆</button>。负荷侧接网：北弗吉尼亚、凤凰城、达拉斯热点枢纽 4–7 年；美国已承诺大负荷接网申请约 160GW（Wood Mackenzie）；PJM 大负荷接网端到端超 8 年（2026-06）<button class="src" data-src="load-interconnect">◆</button>。</p>
+  </div>
+  <div class="wide xl">
+    <div id="chart-powermap" class="chart-frame"></div>
+  </div>
+  <div class="prose">
+    <p>设备交期是第二道墙：大型变压器 24–36 个月、升压/超高压变 36–48 个月、最大机型 210 周；公用事业以 15% 不可退定金提前 3–4 年锁产线；瓶颈材料取向硅钢（变压器核心材料）全球年产能仅约 250–300 万吨<button class="src" data-src="transformer-lead">◆</button>。燃机：新订单交期约 5 年（Wood Mackenzie，2026-05）；气轮机价格 2027 年底约 $600/kW，较 2019 年 <b>+195%</b>；GE Vernova 燃机在手订单 80GW（2025 底）→ <b>100GW</b>（2026 Q1：44GW 确定 + 56GW 预订），现下单 2028 年交付，正谈 2030 年槽位；上调 2028 年指引至营收 $52B、核心经营利润率 20%<button class="src" data-src="gev-orders">◆</button>。</p>
+    <p>PJM 容量拍卖是价格信号最硬的地方：2027/28 年度清算价 <b>$333.44/MW-day</b>，连续第三次触顶、史上首次未满足备用要求、缺口 6,625MW（以 PJM 官方 PDF 为准；RTO Insider 记 6,516MW 并存）、无价格帽模拟价 $529.80；价格轨迹分段标注：<b>$28.92→$269.92（2024/25→2025/26）为 +833%；全程 $28.92→$333.44 累计 +1,053%</b>。2028/29 年度（2026-07-14）：缺口扩至 <b>6,831MW</b>、备用率 14.4% vs 20% 目标、连续第四次触顶，联邦能源监管委员会批准上限下调 2.5% 至 $325<button class="src" data-src="pjm-auction">◆</button>。</p>
+  </div>
+  <div class="wide">
+    <div id="chart-pjm" class="chart-frame"></div>
+  </div>
+  <div class="prose">
+    <p>延期可以量化：2026 年全球计划上线数据中心至少 16GW（约为 2025 年建成量 3 倍）但仅 5GW 实质施工；140 个项目中 25% 未披露供电方案；2025 年 110 个计划项目 26% 延期，2026 年预计 <b>30–50% 延期</b>（Sightline，2026-02）<button class="src" data-src="datacenter-delay">◆</button>。行业的应对是自备电源 + 核电长期购电协议 + 选址监管套利：全美至少 46 个站点规划自备电源合计 <b>56GW</b>（约占规划中容量 30%；已明确设备的 23GW 中约 75% 为天然气）；xAI 孟菲斯以 122 天建成投产，区域合计约 495MW 在运；Stargate Abilene 29 台×34MW 燃机、约 600MW 已在运行<button class="src" data-src="behind-the-meter">◆</button>。微软与 Constellation 的三里岛 20 年长期购电协议（PPA，预先锁定电价与电量的长期合同）835MW、重启成本 $1.6B、能源部 $1B 贷款，目标 2027 下半年投运；联邦能源监管委员会 2026-06-04 批准豁免转移 760MW<button class="src" data-src="three-mile-island">◆</button>。需求侧：国际能源署（IEA）估数据中心用电 2024 约 415TWh → 2030 约 945TWh（超日本全国）；北美机房空置率 1.4% 历史最低（CBRE，2026-06）<button class="src" data-src="iea-forecast">◆</button>。</p>
+    <blockquote class="quote-card" data-quote="nadella"></blockquote>
+    <blockquote class="quote-card" data-quote="strazik"></blockquote>
+    <p>B 面三条不藏：GE Vernova CEO（2026-04-22）自称燃机「并非真正的卡点」（瓶颈在工程总包（EPC，设计采购施工一体化的总承包模式）/许可/燃料）；摩根士丹利（2026-03）测算 2028 年电力净缺口基准情形基本收敛；并网排队 2025 年底回落约 10%——回落部分因监管改革清退投机申请，排队长度的信号价值在衰减<button class="src" data-src="power-bside">◆</button>。</p>
+  </div>
+  <div class="wide">
+    <div id="chart-powerhard" class="chart-frame"></div>
+  </div>
+  <div class="prose">
+    <div class="read-fa"><p>电力的特殊性在于：GPU 可以加钱插队，内存可以锁长约，封装可以找替代厂——<b>唯独并网排队、变压器交期、燃机槽位，花钱只能买到排队号。</b>这就是「唯一资本无法速成」的含义。</p></div>
+    <div class="falsify"><p><strong>什么证据会推翻本章判断：</strong>摩根士丹利 2028 缺口收敛测算兑现；并网排队持续回落；燃机/变压器交期实质性缩短；PJM 拍卖降温——四条中任何两条成立，本章判断就要从「约束」降级为「摩擦」。</p></div>
+  </div>
+</section>
+
+<!-- ═══════════ §8 资产负债表战争 ═══════════ -->
+<section class="band" id="sec-balance" data-win="balance">
+  <div class="prose">
+    <p class="kicker">§8 · THE BALANCE-SHEET WAR</p>
+    <h2>资产负债表战争：$695–725B 黄橙灯，顶部信号在债券市场</h2>
+    <p class="dek">2026 年，行业从花自己赚的钱，转向借钱扩张；本轮不是已被确认的泡沫，而是「投入大、赚得少」的早期阶段、回本尚未被证明。<strong>链条最脆处不在四家超大云厂商，而在 OpenAI 与供应商之间的资金循环、新兴算力租赁商、Oracle 这些弱节点。</strong></p>
+    <div id="illu-leverage" class="illus-frame"></div>
+    <p>所谓<strong>资产负债表战争</strong>：竞争的胜负手已从「谁的模型强」变成「谁的钱包和借钱能力撑得住」。发债与杠杆先亮牌：2026 年迄今五大云厂商发债 <b>$159B</b>（Dealogic，截至 2026-06 初，同比 +47%；2025 全年 $108B、2024 仅 $17B）；2026 年全球 AI 相关债券融资约 <b>$335B</b>（含项目债与新兴算力租赁商——按调用量出租 GPU 算力的新公司，超 2025 全年 2 倍）；UBS 看超大云厂商全年 $230–240B（预测口径）；2026-07-10 长端 AI 债遭抛售<button class="src" data-src="dealogic-159b">◆</button>。超大云厂商净债务/核心经营利润 <b>两个季度从 0.9 倍 → 1.8 倍</b>（摩根士丹利 2026-07-08 测算，单一来源、公开不可核）；高盛当周建议客户对冲超大云厂商债务泡沫<button class="src" data-src="leverage-18x">◆</button>。判断给得很明确：<strong>黄橙灯</strong>——介于黄灯（值得警惕）与橙灯（已经恶化）之间，需求证据还在，但现金压力已经看得见；这是本报告给出的最谨慎的一个判断。</p>
+  </div>
+  <div class="wide xl">
+    <div id="chart-finance" class="chart-frame"></div>
+  </div>
+  <div class="prose">
+    <p>资本开支（买设备、建数据中心的长期投入）按公司披露现金口径：FY2025 四家合计 <b>$359.9B（+64%）</b>＝Microsoft 64.6（6 月财年、现金口径）+ Alphabet 91.4 + <b>Amazon 131.8</b> + Meta 72.1；2026 年指引合计 <b>$695–725B</b>，相当于 <b>+93%~+101%（中值约翻倍）</b><button class="src" data-src="capex-group-a">◆</button>。另有券商汇总口径（Nomura，含融资租赁）FY2025 合计 $412.9B（+68%），差额约 $53B 几乎全部为 Microsoft 口径差——两套口径各自自洽，本报告主用公司披露现金口径<button class="src" data-src="capex-nomura">◆</button>。资本开支/经营现金流：FY2025 Amazon <b>94%</b>（$131.8B/$139.5B；更硬口径：自由现金流 $38.2B→$11.2B）、Alphabet 55%、Meta 62%、Microsoft 约 65%；2026 年四家合计指引约 $725B ≈ 经营现金流的约 90–100%（UBS 约 100%、公开测算 92%，口径敏感；过去 10 年均值约 40%）<button class="src" data-src="capex-ocf">◆</button>。2026 Q1 当季买设备现金/经营现金流：Microsoft 0.66×、Alphabet 0.78×、<b>Amazon 1.70×（红灯——当季买设备花的现金 $44.2B，第一次超过了生意赚回的现金）</b>、Meta 0.59×；已签约付款承诺/年化经营现金流：1.05× / 1.81× / <b>5.47×</b> / 1.84×（本报告测算，基于官方季报）<button class="src" data-src="q1-cash-stress">◆</button>。</p>
   </div>
   <div class="wide xl">
     <div id="chart-capex" class="chart-frame"></div>
   </div>
+  <div class="prose">
+    <p>逐家融资：Amazon 2025 以来投资级发债 &gt;$82B、表外未开始租赁 $96.4B + 采购义务 $84.8B；Alphabet 发债 $25B+$32B（含 £1B <b>100 年期债</b>、票息 6.125%），未做股权融资；Meta $30B（认购 $125B）+ 约 $25B（认购缩至约 $96B，-23%——但对 $25B 发行额仍是 3.8 倍覆盖，「疲态」是相对读数）+ Hyperion 表外合资 $27B（Blue Owl 占 80%，四位参议员致函美国金融稳定监督委员会）；Microsoft <b>唯一未发债</b>，但未开始租赁 $92.7B→<b>$155.1B（半年 +67%）</b><button class="src" data-src="funding-byco">◆</button>。<strong>弱节点</strong>（链条上财务最脆弱、风暴来时最先出事的公司）：Oracle 已签约未交付合同 $553B（+325%）——现金撑到 2026-11 的测算、5 年债务违约保险价（CDS，为债务违约买保险的价格）&gt;125bp 为 2009 以来最高、$14B 项目债据传被拒购，三项均为媒体报道、未独立核验<button class="src" data-src="oracle-rpo">◆</button>；CoreWeave 债务 $24.9B、<b>利息占收入 25.8%</b>（2026 Q1 单季口径：利息 $536M / 收入 $2.08B，全年利息将随新债上升）、调整后核心经营利润率 46.3%、Fitch 评级 BB+（2026-05-18 上调）、2026 资金缺口约 $17B、在手订单 $99.4B = 47.8 倍季度收入<button class="src" data-src="coreweave-metrics">◆</button>。</p>
+    <p>供应商资金循环：NVIDIA 对 OpenAI 的 <b>$100B 意向书于 2026-02 作废</b>（FT 报道），转为 $30B 股权；黄仁勋 2026-03-04 称对该公司的投资「很可能是最后一笔」；对 CoreWeave 有 $6.3B 未售容量购买义务（美国证监会申报文件）；NewStreet 估算 NVIDIA 约 $10B 对外投资对应约 $35B GPU 收入；AMD-OpenAI 6GW + 1.6 亿股认股权证<button class="src" data-src="nvda-openai-loi">◆</button>。OpenAI <b>8 年 $1.4 万亿承诺</b>（Oracle 约 $300B、Microsoft $250B、AWS $38B、CoreWeave 约 $22.4B）对照年化收入约 $25B、2024–2029 累计烧钱预计 &gt;$140B<button class="src" data-src="openai-commitments">◆</button>。回收质量同样未闭合：当年 AI 经营利润 proxy / AI 相关资本开支，四家均未闭合（Microsoft 0.11×、Alphabet 0.10×、Amazon 0.17×、Meta 0.10×）；年度资本费用覆盖 Amazon 0.81× 最接近，其余 0.46–0.52×（本报告测算）<button class="src" data-src="recovery-quality">◆</button>。</p>
+  </div>
   <div class="wide">
-    <div id="chart-capexlamp" class="chart-frame"></div>
+    <div id="chart-precedent" class="chart-frame"></div>
   </div>
   <div class="prose">
-    <div class="read-fa"><span class="fa-tag">读法 · §5</span>CapEx 是整条链的总开关：<b>它一旦回撤，§2 的上游份额、§3 的缺口路径、§4 的 F 层量价会同时改数。</b>所以 FY27 指引被单独写进反证登记册 F-06——任何一家巨头增速低于 +14%，黄橙灯转红。</div>
-  </div>
-</section>
-
-<!-- ═══════════ §6 供给闸门 ═══════════ -->
-<section id="sec-gates" class="band">
-  <div class="prose">
-    <p class="sec-no">§6 · 供给闸门</p>
-    <h2>四级闸门：刚性即排序</h2>
-    <p class="dek">HBM &gt; CoWoS &gt; 电力交付 &gt; 光互联。<strong>排序不看打分，看有没有绕行方案。</strong></p>
-    <p>第一级 <b>HBM：2026 售罄、2027 HBM4 全订完，无绕行路线</b>——三家寡头加晶圆转换损耗，SK 崔泰源把缺口看到 2030。第二级 <b>CoWoS / 先进封装</b>：TSMC 2026-07-16 法说会的官方措辞是「severely supply-constrained」，绕行方案（OSAT、EMIB）尚在早期。第三级 <b>电力交付</b>：美国在建数据中心 32GW（70% AI），并网、许可、高密交付是瓶颈。第四级 <b>光互联</b>：紧但有竞争，多供应商与铜光共存给出了真实的绕行。</p>
-    <blockquote class="quote-card" data-quote="wei"></blockquote>
-    <p>守门人自己的措辞就是证据等级：<b>「severely supply-constrained」不是卖方措辞，是 TSMC 法说会的官方措辞</b>，且把封装点名为「限制客户成长的瓶颈」、capex 上调至 $60-64B。供给刚性是本周期利润池守在闸门、不在云端的物理基础。</p>
+    <p>历史先例必须摆上桌：<b>资本开支超过经营现金流且无保底回报的样本里，没有活下来的先例</b>——电信崩、页岩崩、Intel 受挫；公用事业因监管保底没崩；Amazon 2010-14 是误引<button class="src" data-src="precedent-matrix">◆</button>。2001 电信对照：1996–2001 融资超 $2 万亿；需求神话「流量 100 天翻番」（实际为一年翻番）；供应商融资敞口 2000 年底约 $25.6B；断裂过程 = 资本退潮 → 设备商加速放贷续命 → 48 家地方性电信商同步破产——同构点是<strong>同步性风险</strong>：同一融资源头退潮时，所有弱节点同时失血<button class="src" data-src="telecom-2001">◆</button>。</p>
+    <p>多头硬牌必须并列：H100 一年期租金反弹 40% 至 $2.35/GPU 小时（SemiAnalysis，2026-04-06）；AWS Q1 +28% 为十五个季度最快；Google Cloud 在手订单 $462B；Cerebras 已签约未交付合同 $24.6B = 48.2 倍 2025 年收入（上市申请文件坐实）<button class="src" data-src="bull-evidence">◆</button>。</p>
+    <blockquote class="quote-card" data-quote="huang"></blockquote>
   </div>
   <div class="wide xl">
-    <div id="chart-gates" class="chart-frame"></div>
+    <div id="chart-openai" class="chart-frame"></div>
   </div>
   <div class="prose">
-    <div class="read-fa"><span class="fa-tag">读法 · §6</span>闸门排序的用法是反着读：<b>越往下，绕行越多、超额利润越薄；越往上，越接近「无绕行定价权」。</b>注意 HBM 行内的 watch 注记——1Q26 起 HBM 每片晶圆收入已被 DDR5 RDIMM 反超，这是刚性排序里唯一出现的松动信号（已列入 F-04）。</div>
+    <div class="note-box"><p><b>一则读者视角的核查说明。</b>有市场观点将 2026 年 7 月 16–17 日板块调整归因于新模型发布。我们核查了主要公开分析，未发现支持该归因的证据，故本报告不采纳这一解释。主流归因是台积电上调资本开支引发现金流担忧、存储股获利了结与杠杆 ETF 踩踏。更深一层的判断是：新模型证明了单位智能成本可以大幅下降，但压缩成本释放的是更多需求——这不构成「资本开支无用」的证据。</p></div>
+    <div class="read-fa"><p>看周期位置要看债券市场，不看订单簿——订单簿告诉你需求的故事，债券价格告诉你有人开始给这个故事标价风险。<b>黄橙灯的含义：需求证据还在，但现金压力已经看得见。</b></p></div>
+    <div class="falsify"><p><strong>什么证据会推翻本章判断（两个方向都算数）：</strong>泡沫确认信号——GPU 租赁价与利用率同时趋势性下行、超大云厂商下修资本开支 + 算力租赁商违约；或反向——需求锚点持续增强而资本开支指引不再上修，黄橙灯转绿，「投入大、赚得少」被证明是多虑。</p></div>
   </div>
 </section>
 
-<!-- ═══════════ §7 中国链 ═══════════ -->
-<section id="sec-china" class="band">
+<!-- ═══════════ §9 利润池瀑布 ═══════════ -->
+<section class="band" id="sec-pool" data-win="pool">
   <div class="prose">
-    <p class="sec-no">§7 · 中国链</p>
-    <h2>利润在哪一层可验证</h2>
-    <p class="dek"><strong>可验证利润在 AI CapEx / 国产替代供给链；模型/App 量增利未证。</strong>五层证据按强度分色：蓝 = 利润持续兑现，黄 = 周期观察，灰 = 量增利未证。</p>
-    <p>最强的一层是国产算力芯片：海光 H1 净利 +41.5~52.3%、摩尔线程 H1 营收 +135~149%——<b>国产替代的订单与利润在同一季兑现</b>。光互连已验证：中际旭创订单覆盖 2026 全年、源杰 Q1 净利 +1153%，但首次官方承认「部分原有客户需求下调」——结构轮动已经写进 F-08。DRAM/存储是唯一的黄灯层：长鑫 H1 净利指引 500-570 亿兑现 cycle beta，但 Q3 合约价涨幅收敛到 +13~18%——周期进入中后段。模型/App 层量增利未证：唯一可验证的模型经济收入层是云（阿里云 AI 收入 89.71 亿/季）。</p>
+    <p class="kicker">§9 · THE PROFIT POOL</p>
+    <h2>71.3%：利润在上游结算，模型层为负（base 情景）</h2>
+    <p class="dek">任务经济的需求、瓶颈接力的稀缺、资产负债表的投入，当前都在上游结算。<strong>「模型收入足以支撑『需求真实』，但不足以支撑『模型层已拿走主要利润池』。」</strong></p>
+    <p>把整条链按「谁在本季结算到经营利润」切成六层，做成<strong>瀑布图</strong>（从总利润开始，像瀑布一样逐级拆分，看清每一层分到多少）。单季读数（本报告测算，base 情景）：正利润池 <b>$91.69B</b> = 半导体 $65.33B（<b>71.3%</b>）+ 云/AI 算力 $10.36B（11.3%）+ 数据中心/电力/液冷 $8.00B（8.7%）+ 工作流软件 $6.00B（6.5%）+ 服务 $2.00B（2.2%）+ 模型/接口层 0%——模型层按净利润池口径为 <b>-$5.00B（-5.8%，分母为净利润池 $86.69B）</b><button class="src" data-src="pp-base">◆</button>。情景稳健性：悲观情景正利润池 $73.79B、半导体 <b>80.4%</b>（云层 $7.96B、份额 10.8%；模型层 -19.4%）；乐观情景 $121.14B、半导体 <b>60.5%</b>（云层 $13.81B、份额 11.4%；模型层 +3.3%）——<b>乐观情景下半导体仍有 60.5%，上游化在情景间稳健（走廊 60.5%–80.4%）</b><button class="src" data-src="pp-corridor">◆</button>。份额较上一期测算微降，是数据中心/电力与应用层锚点增强带来的相对稀释，并非上游走弱。分母口径图注写明：正利润池 = 情景内正值层之和；模型层单列净利润池份额并注明分母。</p>
+  </div>
+  <div class="wide xl">
+    <div id="chart-profitpool" class="chart-frame"></div>
+  </div>
+  <div class="prose">
+    <p>官方锚点：NVIDIA 2027 财年 Q1（截至 2026-04-26）数据中心收入 <b>$75.2B/季（+92%）</b>、全公司收入 $81.615B、经营利润 $53.536B、毛利率 74.9%<button class="src" data-src="nvda-fq1">◆</button>；Google Cloud Q1 收入 $20.028B / 经营利润 $6.598B / 在手订单 &gt;$460B；Broadcom 2026 财年 Q2 AI 半导体 $10.8B（+143%）、全财年目标 $56B<button class="src" data-src="gcloud-broadcom">◆</button>。模型层对照：OpenAI 2025 年经营亏损 <b>-$20.92B</b>（审计报道口径，平均约 -$5.2B/季）<button class="src" data-src="openai-loss">◆</button>；Anthropic 年化收入 $47B（管理层口径，未经审计；其 2026 Q2 经营利润转正的说法为媒体二手转述，口径有争议，未独立核验）<button class="src" data-src="anchor-anthropic">◆</button>。硬件利润子池两级拆解：NVIDIA/GPU 系统约 <b>70.1%</b>、其他半导体（HBM/先进封装/设备）约 19.9%、数据中心电力/液冷/交付约 10.0%——服务器代工与普通 PCB 不是主要利润池（本报告测算）<button class="src" data-src="hw-subpool">◆</button>。</p>
+  </div>
+  <div class="wide xl">
+    <div id="chart-sankey" class="chart-frame"></div>
+  </div>
+  <div class="prose">
+    <p>上面是<strong>桑基图</strong>（用宽窄不同的缎带展示资金或利润的流向，带越宽流量越大）：模型公司的成本，就是云、半导体、数据中心各层的收入——Anthropic 的开支流向 Google/AWS/Broadcom，OpenAI 的开支流向 Azure/Oracle/NVIDIA。需求硬度看订单覆盖倍数：CoreWeave 在手订单 $99.4B / 季度收入 $2.078B = <b>47.8 倍</b>；Cerebras $24.6B / 2025 收入 $0.510B = <b>48.2 倍</b>（上市申请文件坐实）；GE Vernova 在手订单 $163B、数据中心订单占比 13.1%；伊顿数据中心在手订单约等于 2025 年建设速度的 12 年、订单同比 +240%；nVent 在手订单 2.09 倍季度销售；Nebius 收入 +683.9%<button class="src" data-src="coverage-ratios">◆</button>。</p>
+    <p>六种「租」把利润分配讲成结构：<strong>稀缺租</strong>（因为东西稀缺而多赚到的超额利润——不是因为做得更好，而是因为别人拿不到：NVIDIA/台积电/HBM/封装/电力设备）/ 调度租（AWS/Azure/GCP/CoreWeave）/ 智能租（OpenAI/Anthropic/Google DeepMind）/ 集成租（数据与治理平台）/ 智能体工具租（路由/观测/评测）/ 工作流租（Microsoft/Salesforce/ServiceNow/Adobe），外加转型服务费<button class="src" data-src="six-rents">◆</button>。整体呈<strong>哑铃结构</strong>（两头重、中间轻）：上游稀缺环节与下游工作流软件都能赚钱，中间的通用包装层最容易被挤压。</p>
+    <blockquote class="quote-card" data-quote="gold"></blockquote>
   </div>
   <div class="wide">
-    <div id="chart-china" class="chart-frame"></div>
+    <div id="chart-coverage" class="chart-frame"></div>
+  </div>
+  <div class="wide xl">
+    <div id="chart-rents" class="chart-frame"></div>
   </div>
   <div class="prose">
-    <div class="read-fa"><span class="fa-tag">读法 · §7</span>中国链的分层逻辑与全球链同构：<b>利润守在供给链，模型层仍在烧钱换需求。</b>验证日程写在证据里——寒武纪 8 月半年报看应收/预付/存货质量，光模块 8-19~8-25 半年报验证毛利与订单结构。</div>
+    <div class="read-fa"><p>利润池图回答「谁在本季赚到钱」，不回答「谁的叙事最强」。<b>真正的分界线在零轴——模型层什么时候转正，才是产业链利润地图下一次重画的时刻。</b></p></div>
+    <div class="falsify"><p><strong>什么证据会推翻本章判断（两个方向）：</strong>模型公司现金流到 2028–2029 仍无法证明转正，全链回报率下调、上游收入被解释为资本循环；反向——OpenAI/Anthropic 证明高毛利正现金流，模型层利润留存强于预期。在手订单转收入放慢也算。</p></div>
   </div>
 </section>
 
-<!-- ═══════════ §8 出口管制 ═══════════ -->
-<section id="sec-scen" class="band">
+<!-- ═══════════ §10 中国链 ═══════════ -->
+<section class="band" id="sec-china" data-win="china">
   <div class="prose">
-    <p class="sec-no">§8 · 出口管制</p>
-    <h2>三情景：冻结是基线</h2>
-    <p class="dek">S1 收紧 / S2 维持冻结（基线）/ S3 放松。<strong>2026-06 的 19 天下架，已经把「模型层管制」从假设变成了先例。</strong></p>
-    <p>基线 S2 的形状：NVIDIA 对华高端直销归零、非中需求消化产能；国产算力按现有节奏兑现（海光已验证）；长鑫从样品走向量产；光模块/PCB 的 800G/1.6T 逻辑不变。<b>S1 的最强催化落在国产链——订单、流片、产能全加速；S3 的边际利空同样落在国产链，靠政策采购托底。</b>矩阵里每个单元格都是一条可推演的传导路径，悬停高亮、点击下钻。</p>
+    <p class="kicker">§10 · THE CHINA CHAIN</p>
+    <h2>中国链：赚「被制裁出来的钱」和「建设期的钱」，还没赚到「应用的钱」</h2>
+    <p class="dek">中国 AI 利润真实但分层——最可验证的股东利润在 AI 资本开支/国产替代供给链与 AI 数据中心/电力交付；云/AI 算力收入层已验证；模型/应用股东利润仍未证明。<strong>生态赢家 ≠ 股东赢家。</strong></p>
+    <div id="illu-strata" class="illus-frame"></div>
+    <p>同一把尺子的中国映照：豆包 180 万亿 token/天决定全球缺口方向（§5 的 55% 权重），但利润桥断在付费率——<b>月活、token、下载量一律不能当利润证据</b>，必须过「付费率 → 每用户平均收入 → 推理成本 → 毛利 → 补贴剥离」利润桥。按利润性质分七类：真实任务利润 / 任务收入 / AI 资本开支利润 / 国产替代利润 / <strong>周期红利</strong>（跟着行业周期涨跌的钱，区别于稀缺带来的超额利润）/ 只赚过手钱（收入高、利润薄）/ 只有概念没有利润。</p>
+  </div>
+  <div class="wide xl">
+    <div id="chart-chinalayers" class="chart-frame"></div>
+  </div>
+  <div class="prose">
+    <p>已验证层。国产芯片：寒武纪 2025 收入 64.97 亿元（+453.21%）、净利 20.59 亿元、净利率 <b>31.7%</b>；海光收入 143.77 亿元、净利 25.45 亿元、净利率 17.7%，2026 上半年预告净利 <b>+41.5%~52.3%</b>（07-16）；摩尔线程上半年预告营收 +135%~149% 且 Q1 扭亏<button class="src" data-src="cambricon-hygon">◆</button>。口径纪律：这些只能表述为「AI 资本开支/国产替代供给链利润」，不是「前沿模型利润」。高端 PCB：沪电股份 AI 相关 PCB 占总收入 <b>59.0%</b>、占数据通信 PCB 76.2%、PCB 毛利率 36.91%——中国硬件链里最干净的 AI 基础设施收入暴露；胜宏科技净利率 22.4%<button class="src" data-src="hudian-pcb">◆</button>。光互连：中际旭创 2025 收入 382.4 亿元、净利 108.0 亿元、光模块毛利率 42.6%；2026-07-12 首次官方承认「部分原有客户需求下调」，新云厂商/AI 客户上调对冲，订单覆盖 2026 全年排至 2027——<b>读法从「需求单边上修」改为「结构轮动、总量仍紧」</b>；新易盛毛利率 47.8%；源杰 Q1 净利 +1153%<button class="src" data-src="innolight-2025">◆</button>。</p>
+    <p>内存/存储是唯一的周期观察层：长鑫科技 2025 收入 618.0 亿元、净利 330.1 亿元；7-16 申购、<b>截至 2026-07 为科创板募资规模最大的 IPO</b>、7-27 上市；招股书指引 2026 上半年净利大幅超上年全年同期（具体数字以招股书为准）<button class="src" data-src="cxmt-ipo">◆</button>。其 HBM 仍处 16nm HBM3 样品阶段——定性为周期红利，非 HBM 稀缺利润。DRAM 合约价 2026 Q1 +93~98%、Q2 +50~55%、TrendForce（07-10）预计 Q3 放缓至 <b>+13~18%</b>——涨幅收敛先于价格见顶，周期进入中后段的早期信号<button class="src" data-src="dram-contract">◆</button>。云/AI 算力：阿里云 AI 产品收入 89.71 亿元/季、AI 年化收入 &gt;358 亿元——唯一可验证的模型经济收入层；百度智能云 Q1 2026 AI 云基建收入 8.8 亿元（+79%）<button class="src" data-src="aliyun-ai">◆</button>。</p>
+  </div>
+  <div class="wide">
+    <div id="chart-dram" class="chart-frame"></div>
+  </div>
+  <div class="prose">
+    <p>AI 数据中心利润桥三公司对照：<b>润泽科技</b> AI 数据中心收入 25.1 亿元（占 44.24%）、该业务毛利率 <b>48.50%</b>、成熟资产上架率 &gt;90%（已出租机位占比）、累计交付 750MW——唯一有直接利润锚点的公司；须用扣非口径（扣除一次性收益后的净利润）：归母 50.5 亿元 vs 扣非 19.01 亿元，差额含不动产信托基金（REITs）投资收益<button class="src" data-src="runze-aidc">◆</button>。奥飞数据财务费用/收入 12.17%（转型中）；数据港 401MW 在运但智算收入占比仅 0.21%（未来期权：目前贡献很小）。模型/应用层：豆包月活 3.45 亿；腾讯 AI 新品单季拖累约 88 亿元；WPS AI 月活 8,013 万但无 AI 单独收入——<b>使用暴涨 ≠ 股东利润</b>。反例卡：浪潮信息收入 1,647.82 亿元但服务器毛利率 4.52%、净利率 1.46%、库存/收入 28.2%——放量 ≠ 稀缺利润；华勤净利率 2.36%（只赚过手钱）<button class="src" data-src="inspur-margin">◆</button>。</p>
+  </div>
+  <div class="wide xl">
+    <div id="chart-aidc" class="chart-frame"></div>
+  </div>
+  <div class="prose">
+    <div class="note-box"><p><b>侧栏：华为证据可信度分层。</b>官方发布层之外，「韬（τ）定律」称逻辑折叠可在固定节点实现 55% 晶体管密度提升、41% 能效增益（预印本，未独立验证）；381 款芯片、2031 年等效 1.4nm（公司声称）。以上只放观察名单：<b>公司声称/预印本，未经第三方验证，不进已验证层。</b></p></div>
+    <div class="read-fa"><p>中国链的分层逻辑与全球链同构：<b>利润守在供给链，模型层仍在烧钱换需求。</b>区别在驱动力——全球链赚稀缺的钱，中国链多赚一层「被制裁出来的钱」。</p></div>
+    <div class="falsify"><p><strong>什么证据会推翻本章判断：</strong>中国模型/应用量增但付费率、每用户平均收入、毛利不成立；DRAM 合约价涨幅见顶回落（早期信号已现）；寒武纪/海光毛利下滑或库存上升；中际旭创「需求下调」扩散为总量下修。</p></div>
+  </div>
+</section>
+
+<!-- ═══════════ §11 出口管制 ═══════════ -->
+<section class="band" id="sec-export" data-win="export">
+  <div class="prose">
+    <p class="kicker">§11 · EXPORT CONTROL</p>
+    <h2>出口管制：冻结是基线，模型层首次进入管制矩阵</h2>
+    <p class="dek">双向冻结是当前基线；2026-06 前沿模型首次被行政令中断全球供给 19 天——「生产力单元的跨境结算」从此有了先例。<strong>不预测政策，只准备响应。</strong></p>
+    <div id="illu-gate" class="illus-frame"></div>
+    <p>芯片层双向冻结：美国商务部工业安全局（BIS）2026-05-31 指引扩展至受限国企业境外子公司（堵第三国绕道）；中国海关据报指示 H200 不得入境（战略与国际研究中心（CSIS）2026-07-07 转述）；NVIDIA 对华高端直销归零（黄仁勋 04-30 口径）；B30A 未放行<button class="src" data-src="bis-freeze">◆</button>。模型层先例：<b>2026-06-12 美商务部令 Anthropic 两个新模型全球下架，07-01 恢复——停售 19 天</b>；另一美国旗舰模型被要求分阶段开放<button class="src" data-src="model-takedown">◆</button>。中国侧：新建智算中心国产算力采购占比要求（≥75% 口径，原文未核验，标注待核）；北京对能耗效率（PUE）&gt;1.35 的存量数据中心征差别电价<button class="src" data-src="china-side-rules">◆</button>。酝酿中：美商务部 2026-07-14 释放新监管行动信号。</p>
   </div>
   <div class="wide xl">
     <div id="chart-scenarios" class="chart-frame"></div>
   </div>
   <div class="prose">
-    <p>先例必须记录在案：<b>Claude Fable 5 / Mythos 5 全球停售 19 天（06-12 → 07-01）</b>——前沿模型首次被行政令直接中断供给。模型层从此进入了管制矩阵：S1 情景下「中国模型获全球分发真空」不再是修辞。</p>
-    <div class="read-fa"><span class="fa-tag">读法 · §8</span>情景矩阵的用法是盯触发条件而不是押概率：<b>B30A 放行 → S3；管制扩到 HBM/零部件/第三国 → S1；模型层再次下架 → S1（模型层）。</b>触发一旦发生，回到 §7 的分层卡片重排强弱。</div>
+    <p>三情景要点：<b>收紧</b> → 国产算力芯片最强催化、长鑫 HBM 战略价值跳升、中国模型获全球分发真空；<b>冻结（当前基线）</b> → 国产替代按现有节奏兑现（海光预告已验证）；<b>放松</b> → NVIDIA 部分回流但份额已永久损失、国产芯片政策溢价下修；光模块/PCB/服务器在三情景下基本不变（需求在海外）<button class="src" data-src="scenario-matrix">◆</button>。情景开关同时联动 §10 中国链分层图的强弱着色。</p>
+  </div>
+  <div class="wide">
+    <div id="chart-exporttimeline" class="chart-frame"></div>
+  </div>
+  <div class="prose">
+    <div class="read-fa"><p>情景矩阵的用法是盯触发条件而不是押概率：<b>B30A 放行走向放松；管制扩到 HBM/零部件/第三国走向收紧；模型层再次下架，收紧情景蔓延到模型层。</b>触发一旦发生，回到 §10 的分层图重排强弱。</p></div>
+    <div class="falsify"><p><strong>什么证据会推翻本章判断：</strong>07-14 信号落地为收紧或放松的实际政策（基线本身被改写）；模型层管制常态化——第二次行政令停售出现，「先例」变成「惯例」。</p></div>
   </div>
 </section>
 
-<!-- ═══════════ §9 反证登记册 ═══════════ -->
-<section id="sec-signals" class="band">
+<!-- ═══════════ §12 裁决与反证 ═══════════ -->
+<section class="band" id="sec-verdict" data-win="verdict">
   <div class="prose">
-    <p class="sec-no">§9 · 反证登记册</p>
-    <h2>八条触发器：什么时候改主意</h2>
-    <p class="dek">研究的价值，是提前一个季度知道什么时候该改主意。<strong>任何一条触发，就回到对应模型重估。</strong></p>
-    <p>八条触发器各自挂载一个本报告的承重结论：需求增速（F-01）与供给增速（F-02）看守 §3 的缺口路径；DRAM 周期位置（F-03）与 HBM 相对盈利（F-04）看守 §6 的闸门排序与 §7 的存储层；F 层量价自校验（F-05）看守 §4；CapEx 指引（F-06）与 neocloud 经济性（F-07）看守 §5；光互连结构轮动（F-08）看守 §7。<b>每条都给出当前读数、触发阈值与触发后的动作——触发条件写在牌面上，不藏在脚注里。</b></p>
+    <p class="kicker">§12 · VERDICTS AND FALSIFIERS</p>
+    <h2>裁决与反证：八架天平，八条红线</h2>
+    <p class="dek">把全报告的判断压缩成一张表——左边是八架天平（每个假说的证据权重），右边是八条红线（什么证据出现，结论就反转）。<strong>读者带走的不是结论清单，而是判断的用法。</strong>每条判断都附失效条件：以下指标一旦越线，对应结论即应重估。本报告数据截至 2026-07-17。</p>
+    <div class="callout-red">
+      <span class="co-tag">必有一错</span>
+      <p>本报告判断此处必有一错：前沿档按「用量 8 倍 + 价格持平」外推会得到不可能的收入（$226B → $1.366 万亿）——<b>要么编程智能体用量增速下台阶，要么前沿档价格扛不住。</b>两个方向的证据已在下面列出。</p>
+    </div>
+    <p>八架天平的读法：蓝 = 已验证、琥珀 = 有证据有争议、灰 = 假说待裁决；<b>判断强度永远不超过证据强度</b>。H1 任务通胀使需求被系统性低估（已验证）；H2 计量战争赢家是混合制而非按结果计费（有证据有争议）；H3 前沿定价权真实但靠补贴（有证据有争议）；H4 需求 3.94x vs 供给 2.85x、缺口温和收紧（有证据有争议，本报告测算）；H5 瓶颈接力到电力、资本无法速成（有证据有争议）；H6 资本开支是黄橙灯的「投入大、赚得少」、不是泡沫（有证据有争议）；H7 利润池 71.3% 上游化、模型层为负（有证据有争议，本报告测算快照，base 情景）；H8 中国利润在资本开支/国产替代链、模型/应用未证明（有证据有争议）。</p>
   </div>
   <div class="wide xl">
-    <div id="chart-signals" class="chart-frame"></div>
+    <div id="chart-verdictmatrix" class="chart-frame"></div>
   </div>
   <div class="prose">
-    <div class="read-fa"><span class="fa-tag">读法 · §9</span>登记册是活文档：<b>下一批观察窗集中在 7-22~29 财报季（GOOGL / MSFT / META）与 8 月 A 股半年报。</b>触发一条，改一个数；改一个数，重画一张图——这正是模型卡存在的意义（§10）。</div>
+    <p>八条红线，静态条件句，越线即重估：<b>①</b> HBM 或先进封装的合同价转跌、交期缩短、库存上升（至少两类同现）→ 上游稀缺利润重估为周期性风险；<b>②</b> GPU 租赁价格与利用率同时趋势性下行 → 算力租赁商折旧压力重估；<b>③</b> 在手订单增长但云收入/AI 年化收入/毛利不同步 → 资本开支回收可见性下调；<b>④</b> AI 产品采用增长但续费率/年度合同额/毛利不改善 → 应用层变现质量下调；<b>⑤</b> OpenAI/Anthropic 到 2028–2029 仍无法证明正现金流 → 全链回报率下调；<b>⑥</b> 中国模型/应用量增但付费率/毛利不成立 → 中国股东赢家判断下调；<b>⑦</b> token 用量涨、任务完成与工作流收入不涨 → 「降价释放利润」降级为「扩大基础设施消耗」；<b>⑧</b> 中国模型服务一线增速砍半 → 供需缺口结论翻转（§5 的敏感性开关）。</p>
+  </div>
+  <div class="wide xl">
+    <div id="chart-triggers" class="chart-frame"></div>
+  </div>
+  <div class="prose">
+    <div class="read-fa"><p>研究的价值，是提前知道什么时候该改主意。<b>触发条件写在牌面上，不藏在脚注里——这张表就是全报告所有判断的「用法说明」。</b></p></div>
+    <div class="falsify"><p><strong>什么证据会推翻本章判断：</strong>这张表不预测未来，只约定响应——如果红线被触发而结论没有重估，失效的不是证据，是这份报告的用法。</p></div>
   </div>
 </section>
 
-<!-- ═══════════ §10 方法、时效与边界 ═══════════ -->
-<section id="sec-method" class="band">
+<!-- ═══════════ §13 总结：结论与方向 ═══════════ -->
+<section class="band" id="sec-conclusion" data-win="conclusion">
   <div class="prose">
-    <p class="sec-no">§10 · 方法、时效与边界</p>
-    <h2>每个结论可回溯，每条边界摆上台面</h2>
-    <p class="dek"><strong>as-of 纪律：全部锚点限当季证据，任何读数超过 120 天未刷新即报警。</strong>模型卡概念：每个结论可回溯到 dossier 的模型与 canonical CSV。</p>
-    <p>本报告是 progressive research 的一次切片：数据层是 dossier 的 canonical rows（截至 2026-07-17 的证据刷新），展示层只做可视化与下钻，不新增任何数字。所有图表共用四类来源标注——公司披露 / 券商研究 / 行业官方 / 自研模型；四类之外的读数，一律不进图。</p>
-    <div class="note-box"><b>已知失真清单（五条，照实列出）：</b><br/>
-      ① S-03 供给服务速率未拆档——单一速率校准（Google 1,600 tok/s）抹平了代际与机型差异；<br/>
-      ② 中国 MaaS 的有效价偏贵——C 层价格假设对中国补贴型 MaaS 系统性偏高，是收入池 base 读数偏高 1.5-2x 的主因；<br/>
-      ③ Anthropic 口径存在云分成争议——run-rate 与云渠道分成后的净口径之间有一段距离；<br/>
-      ④ tibo / X 来源为 leak 层级——只作旁证，不作锚点（使用处已逐处注明）；<br/>
-      ⑤ MLPerf 峰值仅作上界——不进 base 供给合成，防止实验室速率高估可交付吞吐。</div>
-    <div class="read-fa"><span class="fa-tag">读法 · §10</span>方法论一句话：<b>结论可以错，失真必须已知。</b>下次刷新时，先对账 §9 的八条触发器，再动任何一张图。</div>
+    <p class="kicker">§13 · CONCLUSIONS AND DIRECTIONS</p>
+    <h2>总结：利润在上游结算，按棒择时，哑铃配置</h2>
+    <p class="dek">前面十三章收成一条线：需求是真的，需求仍快于供给，供给追不上的原因在物理世界，钱因此加杠杆且当前在上游结算。<strong>以下是结论与方向。</strong></p>
+    <div id="illu-compass" class="illus-frame"></div>
+    <p><b>需求是真的</b>（§1–§4）：完成一个任务要消耗的算力在快速膨胀，旧算法失效；计费的单位、价格的层次、收钱的证据，都在向「任务」迁移。<b>需求仍快于供给</b>（§5）：按已披露锚点加权，需求增速 3.94 倍仍快于供给 2.85 倍（base 情景），缺口比从 0.70 逼近 1——紧平衡，不是短缺，方向由中国模型服务一线决定。<b>供给追不上的原因在物理世界</b>（§6–§7）：瓶颈沿 GPU→内存→先进封装→电力单向接力；第四棒电力是唯一资本无法速成的约束。<b>钱因此必然加杠杆，且当前在上游结算</b>（§8–§9）：行业从花自己赚的钱转向借钱扩张（黄橙灯，不是泡沫）；利润池 71.3% 在上游半导体（base 情景），模型层按净利润口径为 -5.8%。<b>两个映照</b>（§10–§11）：中国链赚到「被制裁的钱」和「建设期的钱」，还没赚到「应用的钱」；出口管制给「可结算」划出地缘边界。</p>
+    <p>现在的结论，六条，每条标注强度。<b>①</b> 利润当前在上游结算，呈哑铃结构：上游稀缺环节与下游工作流软件两头强，中间的通用包装层（模型转售、单功能壳层）最受挤压（方向已验证）。<b>②</b> 稀缺利润会迁移且强周期化：电力设备与交付链的当前位置，类似 2023 年的先进封装——但租金随棒移交均值回归，上游赢家不是永久赢家（有证据有争议）。<b>③</b> 任务计量正在重排定价权：混合制计费 + 前沿档溢价是当前赢家结构；按结果计费尚未逆转席位制（有证据有争议）。<b>④</b> 资金侧是黄橙灯的「投入大、赚得少」，回本未被证明；最脆弱处在 OpenAI 与供应商之间的资金循环、高杠杆算力租赁商与 Oracle，不在四家超大云厂商（有证据有争议）。<b>⑤</b> 中国链已验证的股东利润在资本开支/国产替代供给链与有客户背书的 AI 数据中心；模型/应用层股东利润未被证明——生态赢家不等于股东赢家（有证据有争议）。<b>⑥</b> 最大的风险不是「泡沫」，是斜率：资本开支增速（约翻倍）远高于经营现金流增速（约两三成），二者终将收敛——<b>收敛的方式（软着陆还是急刹车）决定所有方向的保质期</b>（有证据有争议）。</p>
+  </div>
+  <div class="wide xl">
+    <div id="chart-conclusions" class="chart-frame"></div>
+  </div>
+  <div class="prose">
+    <p>投资方向（方向性判断；超配/低配指相对多配/少配的方向性判断；不点名个股与代码，不构成投资建议）。<b>超配方向（当前利润与稀缺所在）</b>：① <b>电力设备与交付链</b>——燃机、变压器、电气设备、液冷、高密供电：唯一资本无法速成的约束，订单可见度以年计（当前棒在位者，类比 2023 年的先进封装）；② <b>硬约束在位者</b>——高带宽内存、先进封装、先进制程代工：稀缺利润当前在此结算，但按棒择时，租金随棒移交均值回归；③ <b>哑铃另一端：有数据、权限与分发入口的工作流软件平台</b>——真正按任务收到钱且有续费证据者（单独定价的 AI 产品 + 高续费率）；④ <b>中国侧：资本开支/国产替代供给链</b>——光互连、高端 PCB、存储、设备材料，以及有客户背书的 AI 数据中心利润桥（上架率与单兆瓦利润可验证者）。<b>回避/低配方向（挤压与脆弱所在）</b>：① 中间的通用包装层——模型转售、无工作流记忆的单功能 AI 壳层、只靠补贴的订阅档；② 高杠杆弱节点——靠供应商融资循环的新兴算力租赁商、资产负债表紧绷的二线云与项目债主体；③ 只赚过手钱的组装与代工（收入高、利润薄、库存重）；④ 中国「只有概念没有利润」的模型/应用股东敞口——在付费率与毛利被证明之前。<b>本报告为研究分析，不构成投资建议；方向性判断不对应任何个股或代码。</b></p>
+  </div>
+  <div class="wide xl">
+    <div id="chart-direction" class="chart-frame"></div>
+  </div>
+  <div class="prose">
+    <p>方向切换条件，与 §12 红线联动：<b>上游合同价转跌 + 交期缩短</b> → 稀缺利润交易结束，从上游硬约束切向工作流软件与现金；<b>中国模型服务增速砍半</b> → 缺口叙事翻转，全链降低杠杆敞口；<b>超大云厂商资本开支指引下修</b> → 黄橙灯转红，回避高杠杆建设链与弱节点；<b>模型公司证明持续正现金流</b> → 哑铃中间段重估，应用层敞口上调。</p>
+  </div>
+  <div class="wide xl">
+    <div id="chart-shifts" class="chart-frame"></div>
+  </div>
+  <div class="prose">
+    <div class="read-fa"><p>全报告最终只有一句话：<b>稀缺在哪一层，利润就在哪一层结算；瓶颈往哪迁移，利润就往哪迁移。</b>知道自己在接力赛的哪一棒上，比预测终点重要。</p></div>
+    <div class="falsify"><p><strong>什么证据会推翻本章判断：</strong>§12 的八条红线就是本章的失效条件——任何一条越线，对应方向即应切换；方向切换表已经把「改主意的路径」画在明处。</p></div>
+  </div>
+</section>
+
+<!-- ═══════════ 方法边界章：口径、来源与已知局限 ═══════════ -->
+<section class="band" id="sec-method" data-win="method">
+  <div class="prose">
+    <p class="kicker">APPENDIX · METHOD AND SOURCES</p>
+    <h2>口径、来源与已知局限</h2>
+    <p class="dek">数字从哪来、边界在哪，摆上台面。<strong>口径即公信力。</strong></p>
+    <p><b>方法说明。</b>需求侧测算不采用参数正推法——需求按月变化、用量呈幂律分布，单点正推不可靠。本报告改用「已披露锚点 × 情景区间」方法，只给区间、不给单点，全部锚点可点击查看到带日期的公开出处。</p>
+    <p><b>来源说明。</b>本报告全部图表数字出自同一份数据底稿，截至 2026-07-17，均为公开信息或基于公开信息的测算。图中任一数字可点击查看口径与带日期的出处。仅供参考，不构成投资建议。</p>
+    <p><b>来源分级，五级，凡引用必带级别与日期：</b></p>
+    <table class="src-table">
+      <thead><tr><th>级别</th><th>规则</th><th>典型条目</th></tr></thead>
+      <tbody>
+        <tr><td>官方披露</td><td>可当事实，带日期</td><td>公司季报/年报、官方定价页、官方路线图、PJM 拍卖结果、LBNL/IEA/FERC、法说会</td></tr>
+        <tr><td>管理层口径</td><td>注明「管理层口径」</td><td>AI 年化收入、AI 收入折算、在手订单定义</td></tr>
+        <tr><td>券商研究</td><td>保留区间与冲突，不收敛成单点</td><td>HBM 市场规模、资本开支共识 $725B、净债务杠杆 0.9→1.8 倍（摩根士丹利，单一来源）</td></tr>
+        <tr><td>媒体报道与访谈</td><td>注明媒体与日期；泄露/访谈型数字不得写成已验证事实</td><td>SemiAnalysis 测算、匿名社交账号泄露、播客说法、OpenAI/Anthropic 私营数字（统一标「媒体转述/审计报道口径」）</td></tr>
+        <tr><td>本报告测算</td><td>报区间不报点值</td><td>缺口比、利润池份额、收入池、毛利桥、任务成本篮</td></tr>
+      </tbody>
+    </table>
+    <p><b>引用清单（按五级分组，逐条带日期）：</b></p>
+    <div class="ref-list">
+      <p class="ref-group">官方披露</p>
+      <ol>
+        <li>Salesforce 2026 财年 Q1 新闻稿（2026-05-27）：38 亿任务量单位、28.6 万亿 token、7,526 token/任务量单位、每动作 $0.10。</li>
+        <li>Salesforce 2026 财年 Q1 财报（截至 2026-04-30）：Agentforce 年化收入 $1.2B（同比 +205%）、与 Data 360 合并约 $3.4B。</li>
+        <li>GitHub（2026-04-27 宣布、2026-06-01 生效）：Copilot 订阅改按 AI 点数计费（$0.01/点数）。</li>
+        <li>Microsoft（2026-05-01）：E7 套件 $99/席/月上线；（2026-07-01）Copilot Chat 并入基础套件。</li>
+        <li>ServiceNow 2026 Q1 财报：年度合同额目标 $1.0B 上调至 $1.5B、$1M+ 客户同比 +130%、续费率 97%。</li>
+        <li>Adobe：AI 优先产品年化收入 &gt;$500M；Workday：AI 年化收入接近 $500M、智能体新签年度合同额同比 +200%。</li>
+        <li>阿里巴巴集团 2026 财年 Q4 财报：阿里云 AI 产品收入 89.71 亿元/季（占云外部商业化收入 30%，连续 11 季三位数增长）。</li>
+        <li>科大讯飞：星火 API 及模型租用服务收入 3.85 亿元（同比 +263%）；腾讯控股：AI 新品拖累单季经营利润约 88 亿元。</li>
+        <li>各厂商官方定价页（2024-05 至 2026-07）：OpenAI GPT-4o/o1/GPT-4.5/o1-pro/o3-pro/GPT-5/GPT-5.5 Pro、Anthropic Opus 4.6 Fast、Google Gemini 3.5 Flash（2026-05-19）、Kimi K2/K2.6/K3（2026-07-16/17）、Qwen、GLM、DeepSeek（2026-04-26 缓存降价）。</li>
+        <li>Anthropic 工程博客（2025-06）：单智能体 4×、多智能体 15× 对话 token 强度。</li>
+        <li>Google：全平台 token 处理量 9.7T/月（2024）→ 480T（2025-05）→ 1.3Q（2025-10）→ 3.2Q/月（2026-05）。</li>
+        <li>火山引擎（2026-06-23）：豆包日调用量 180T、同比 +10 倍。</li>
+        <li>台积电法说会（2026-07-16）：「severely supply-constrained」、资本开支上调至 $60–64B、Q1 2026 毛利率 66.2%。</li>
+        <li>Micron（2026-06-24）：2026 年 HBM 售罄、2027 年 HBM4 全订完；JEDEC（2025-04）：HBM4 标准（位宽 2048 bit）。</li>
+        <li>NVIDIA 2027 财年 Q1（截至 2026-04-26）：数据中心收入 $75.2B（+92%）、经营利润 $53.536B、毛利率 74.9%。</li>
+        <li>Alphabet 2026 Q1：Google Cloud 收入 $20.028B、经营利润 $6.598B；Broadcom 2026 财年 Q2：AI 半导体 $10.8B（+143%）。</li>
+        <li>Amazon 10-K（FY2025）：资本开支 $131.8B、经营现金流 $139.5B、自由现金流 $38.2B→$11.2B。</li>
+        <li>四大云商季报（2026 Q1）：当季购设备现金/经营现金流 0.66×/0.78×/1.70×/0.59×；Microsoft 未开始租赁 $92.7B→$155.1B。</li>
+        <li>NVIDIA 美国证监会申报文件：对 CoreWeave $6.3B 未售容量购买义务；Cerebras 上市申请文件：已签约未交付合同 $24.6B。</li>
+        <li>CoreWeave 2026 Q1 及 Fitch 评级行动（2026-05-18）：利息 $536M/收入 $2.08B、评级 BB+。</li>
+        <li>PJM 容量拍卖结果（2026-07-14）：2028/29 年度缺口 6,831MW、备用率 14.4%、连续第四次触顶；FERC 批准上限下调 2.5% 至 $325。</li>
+        <li>劳伦斯伯克利国家实验室《Queued Up 2025》：并网排队 2,290GW（2024 底）→ 2,061GW（2025 底）、建成项目中位等待 5 年。</li>
+        <li>国际能源署（IEA）：数据中心用电 2024 约 415TWh → 2030 约 945TWh。</li>
+        <li>GE Vernova 2026 Q1：燃机在手订单 100GW（44GW 确定 + 56GW 预订）、2028 年指引营收 $52B。</li>
+        <li>微软–Constellation 三里岛 20 年长期购电协议（835MW、重启成本 $1.6B）；FERC（2026-06-04）批准豁免转移 760MW。</li>
+        <li>美国商务部工业安全局（2026-05-31）：指引扩展至受限国企业境外子公司；（2026-06-12 → 07-01）Anthropic 两个新模型全球下架 19 天；（2026-07-14）新监管行动信号。</li>
+        <li>寒武纪 2025 年报：收入 64.97 亿元（+453.21%）、净利 20.59 亿元；海光信息（2026-07-16 预告）：上半年净利 +41.5%~52.3%；摩尔线程上半年预告营收 +135%~149%。</li>
+        <li>沪电股份 2025 年报：AI 相关 PCB 占总收入 59.0%、PCB 毛利率 36.91%；胜宏科技净利率 22.4%。</li>
+        <li>中际旭创 2025 年报及公告（2026-07-12）：净利 108.0 亿元、光模块毛利率 42.6%、「部分原有客户需求下调」。</li>
+        <li>长鑫科技招股书（2026-07-16 申购、7-27 上市）：2025 收入 618.0 亿元、净利 330.1 亿元；2026 上半年净利指引大幅超上年全年同期。</li>
+        <li>润泽科技 2025 年报：AI 数据中心收入 25.1 亿元（占 44.24%）、该业务毛利率 48.50%、扣非 19.01 亿元；奥飞数据、数据港 2025 年报。</li>
+        <li>浪潮信息 2025 年报：收入 1,647.82 亿元、服务器毛利率 4.52%、净利率 1.46%。</li>
+        <li>北京差别电价政策：对能耗效率（PUE）&gt;1.35 的存量数据中心征差别电价。</li>
+      </ol>
+      <p class="ref-group">管理层口径</p>
+      <ol>
+        <li>Microsoft：整体 AI 业务年化收入 $37B（同比 +123%）、M365 Copilot 付费席位超 2,000 万。</li>
+        <li>Google Cloud 在手订单 &gt;$460B（2026 Q1 管理层披露口径）；GE Vernova 在手订单 $163B；伊顿数据中心在手订单同比 +240%。</li>
+        <li>黄仁勋（2026-03-04）：对 OpenAI 的投资「很可能是最后一笔」；（2026-04-30）对华高端直销归零。</li>
+        <li>阿里云 AI 年化收入 &gt;358 亿元、模型租用服务（百炼）年化收入 &gt;80 亿元（公司披露口径）。</li>
+        <li>纳德拉（2025-11 中旬，BG2 播客）：「芯片躺在库存里插不上电」（warm shells）。</li>
+      </ol>
+      <p class="ref-group">券商研究（含行业研究机构，同列标注）</p>
+      <ol>
+        <li>摩根大通：2026 年新增加速器约 1,400–1,600 万颗（NVIDIA 约 750 万 + 自研芯片 700–900 万）。</li>
+        <li>UBS（2026-07-07）：SK hynix 以 5 年以上长约锁定 60–70% 量价；HBM 位元需求 +88%；超大云厂商全年发债 $230–240B（预测口径）。</li>
+        <li>摩根士丹利（2026-07-08）：超大云厂商净债务/核心经营利润 0.9→1.8 倍（单一来源、公开不可核）；（2026-03）2028 年电力净缺口基准情形基本收敛。</li>
+        <li>高盛：2030 年全球 token 需求 120Q/月；建议客户对冲超大云厂商债务泡沫。</li>
+        <li>汇丰：2026 年 HBM 供给缺口约 8%（另有 2026→2027 缺口路径 6%→9% 口径，并列待核）。</li>
+        <li>Raymond James（2023-08）：H100 物料成本约 $3,320、终端售价 $25,000–30,000（加价约 7.5–9 倍）。</li>
+        <li>Nomura：四大云商资本开支汇总口径 FY2025 合计 $412.9B（+68%，含融资租赁）。</li>
+        <li>Futurum 调查（n=830）：按结果计费偏好 21.7% vs 席位 20.1%。</li>
+        <li>斯坦福大学研究（arXiv:2604.22750，2026-04）：自动编程任务 10⁶–10⁷ token（单一研究、单一基准）。</li>
+        <li>TrendForce（2026-06-02）：HBM 每片晶圆收入被 DDR5 RDIMM 反超；（2026-07-10）DRAM 合约价 26Q3 预计 +13~18%；HBM4 2027 年合约价或数倍上涨。</li>
+        <li>Wood Mackenzie（2026-05/06）：燃机新订单交期约 5 年；美国已承诺大负荷接网申请约 160GW。</li>
+        <li>Sightline（2026-02）：2026 年计划数据中心项目预计 30–50% 延期；Dealogic（截至 2026-06 初）：五大云厂商发债 $159B（同比 +47%）。</li>
+        <li>CBRE（2026-06）：北美机房空置率 1.4% 历史最低；Cleanview：自备电源规划至少 46 站点、合计 56GW。</li>
+        <li>券商估 Agentforce 付费客户约 9,500（约 6% 渗透率）；Gartner：2026 年内存成本 +130%。</li>
+      </ol>
+      <p class="ref-group">媒体报道与访谈</p>
+      <ol>
+        <li>TechCrunch（2025-08）：评 GPT-5「定价低到可能挑起价格战」。</li>
+        <li>Bloomberg（2026-06-02）：Uber 4 个月烧完全年 AI 预算、随后设 $1,500/人/月上限。</li>
+        <li>《财经》（2026-04-16 / 2026-05-25 / 2026-06 / 2026-06-05）：生产环境 token 浪费率实测 72%、任务强度谱系实测、员工级强度 1,000 万–3 亿 token/日。</li>
+        <li>SemiAnalysis（2026-04-06）：H100 一年期租金反弹 40% 至 $2.35/GPU 小时；（2026-06）订阅补贴 70 倍/40 倍测算（理论上限口径）。</li>
+        <li>Reuters（2026-02）：Claude Code 年化收入 $2.5B（$1M+ 客户超 1,000、两月翻倍）；（2024-05-02）SK hynix CEO 称 2024 售罄、2025 几乎售罄。</li>
+        <li>Financial Times（2026-02）：NVIDIA 对 OpenAI $100B 意向书作废、转为 $30B 股权。</li>
+        <li>周鸿祎（2026-06-24）：「查天气上千万 token、做 PPT 上亿」。</li>
+        <li>OpenAI 2025 年收入 $13.07B、经营亏损 -$20.92B（审计报道口径）；年化收入 $25B（2026-02，媒体转述）。</li>
+        <li>Anthropic 年化收入 $47B（2026-05，管理层口径媒体转述，未经审计）。</li>
+        <li>匿名社交账号泄露（未独立核验）：Codex 周活接近 1,000 万。</li>
+        <li>Oracle 现金撑到 2026-11 测算、5 年债务违约保险价 &gt;125bp、$14B 项目债据传被拒购（三项均未独立核验）。</li>
+        <li>GE Vernova CEO（2026-04-22）：燃机「并非真正的卡点」；Simon Willison 实测：Gemini 3.5 Flash 同一评测 $1,551 vs 前代 Pro $892。</li>
+      </ol>
+      <p class="ref-group">本报告测算（截至 2026-07-17）</p>
+      <ol>
+        <li>供需缺口测算：base 需求 3.94x vs 供给 2.85x、缺口比 0.70→0.97（区间 0.34–2.27）；结论翻转开关算术。</li>
+        <li>利润池测算（单季）：base 正利润池 $91.69B、半导体 71.3%、模型层 -5.8%（净利润池口径）。</li>
+        <li>推理收入池：$241B / $326B / $411B（低/基准/高）；前沿档自校验 $226B → $1.366 万亿。</li>
+        <li>单位任务毛利桥：+6.3% / -87.5% / +29.7%（三情景成本假设全列）。</li>
+        <li>任务成本篮：$0.0004–$25/任务（按官方牌价）。</li>
+        <li>现金压力与回收质量比率：0.66×/0.78×/1.70×/0.59×；回收质量 0.10×–0.17×。</li>
+        <li>六种「租」框架、中国利润性质七分类、出口管制三情景推演。</li>
+      </ol>
+    </div>
+    <p><b>已知局限，五条，照实列出：</b>① 供给测算未按模型档位拆分服务速率；② 中国模型服务的有效价格偏贵，收入池区间可能偏高 1.5–2 倍；③ Anthropic 年化收入与云厂商分成口径未拆；④ 编程智能体周活「近千万」来自匿名社交账号泄露，未经核验；⑤ 行业标准性能测试数据仅作上界。</p>
+    <p><b>免责声明。</b>本报告为研究分析，仅供参考，不构成投资建议；方向性判断不对应任何个股或代码；引用数据以原始出处为准。</p>
   </div>
 </section>
 
 <!-- ═══════════ 页脚 ═══════════ -->
-<footer id="sec-sources">
+<footer id="sec-footer">
   <div class="prose">
-    <p class="sec-no">附录 · 来源纪律</p>
-    <h2>四类标注，宁缺勿编</h2>
-    <div class="note-box">
-      <p><b>来源纪律。</b>每个数字带四类出处之一：<span class="src-cat company">公司披露</span>申报文件、法说会与 IR 材料；<span class="src-cat broker">券商研究</span>只按类目标注；<span class="src-cat industry">行业官方</span>TrendForce、LightCounting、Epoch、政府出版物；<span class="src-cat model">自研模型</span>利润池 Reconstruction v0.5、供需缺口 v0.3.1、价格两层与收入池合成。可组合标注；四类之外不画。</p>
-      <p><b>时效纪律。</b>as-of 2026-07-17：锚点限当季证据，120 天未刷新即报警。引用口径（leak / 市场口径）在卡片内逐处注明层级。</p>
-    </div>
-    <p class="colophon">数据与模型：ai-industry-chain dossier（progressive research），as of 2026-07-17 · 交互研究版 · 工程范式参考 asic42 标杆站 · 仅供参考，不构成投资建议</p>
+    <p class="colophon">交互研究报告 · 每个读数可点击下钻到带日期的出处 · 无源不画 · 仅供参考，不构成投资建议</p>
   </div>
 </footer>
 
 </main>
 
+<!-- 常驻仪表盘（main 外） -->
+<aside id="dash"></aside>
+
 <!-- 统一下钻卡 -->
-<div id="drill-card" hidden=""></div>
+<div id="drill-card"></div>
 
 <script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
 <script src="js/data.js"></script>
 <script src="js/utils.js"></script>
+<script src="js/illustrations.js"></script>
+<script src="js/cover.js"></script>
 <script src="js/charts/timeline.js"></script>
-<script src="js/charts/profitpool.js"></script>
-<script src="js/charts/growthlines.js"></script>
-<script src="js/charts/gap.js"></script>
+<script src="js/charts/mainlines.js"></script>
+<script src="js/charts/spectrum.js"></script>
+<script src="js/charts/intensity.js"></script>
+<script src="js/charts/metering.js"></script>
+<script src="js/charts/precedents.js"></script>
+<script src="js/charts/subsidy.js"></script>
 <script src="js/charts/frontier.js"></script>
 <script src="js/charts/chinafrontier.js"></script>
 <script src="js/charts/pricetier.js"></script>
-<script src="js/charts/revenuepool.js"></script>
+<script src="js/charts/fcheck.js"></script>
+<script src="js/charts/sku.js"></script>
+<script src="js/charts/grossbridge.js"></script>
+<script src="js/charts/taskcost.js"></script>
+<script src="js/charts/penetration.js"></script>
+<script src="js/charts/gap.js"></script>
+<script src="js/charts/growthlines.js"></script>
+<script src="js/charts/sensitivity.js"></script>
+<script src="js/charts/anchors.js"></script>
+<script src="js/charts/relay.js"></script>
+<script src="js/charts/hardness.js"></script>
+<script src="js/charts/hbm.js"></script>
+<script src="js/charts/powermap.js"></script>
+<script src="js/charts/pjm.js"></script>
+<script src="js/charts/powerhard.js"></script>
+<script src="js/charts/finance.js"></script>
 <script src="js/charts/capex.js"></script>
-<script src="js/charts/gates.js"></script>
-<script src="js/charts/china.js"></script>
+<script src="js/charts/precedent.js"></script>
+<script src="js/charts/openai.js"></script>
+<script src="js/charts/profitpool.js"></script>
+<script src="js/charts/sankey.js"></script>
+<script src="js/charts/coverage.js"></script>
+<script src="js/charts/rents.js"></script>
+<script src="js/charts/chinalayers.js"></script>
+<script src="js/charts/aidc.js"></script>
+<script src="js/charts/dram.js"></script>
 <script src="js/charts/scenarios.js"></script>
-<script src="js/charts/signals.js"></script>
+<script src="js/charts/exporttimeline.js"></script>
+<script src="js/charts/verdictmatrix.js"></script>
+<script src="js/charts/triggers.js"></script>
+<script src="js/charts/direction.js"></script>
+<script src="js/charts/shifts.js"></script>
+<script src="js/charts/conclusions.js"></script>
+<script src="js/dash.js"></script>
 <script src="js/main.js"></script>
 
 </body></html>
