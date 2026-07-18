@@ -13,16 +13,32 @@
 
   const P = U.PAL, MONO = U.FONTS.mono, SERIF = U.FONTS.serif;
   const svgEl = U.svgEl;
-  const data = RPT.frontierPrice.map(d => ({ ...d, t: new Date(d.date + "-01T00:00:00") }))
+  // 防御性日期解析：接受 "YYYY-MM" / "YYYY-MM-DD" / "YYYY-MM-DD/DD" 等，取首个合法日期；
+  // 非法记录隔离（console.warn）并剔除，绝不进入比例尺
+  const parseDate = raw => {
+    const m = String(raw == null ? "" : raw).match(/(\d{4})-(\d{1,2})(?:-(\d{1,2}))?/);
+    if (!m) return null;
+    const y = +m[1], mo = +m[2], d = m[3] ? +m[3] : 1;
+    if (mo < 1 || mo > 12 || d < 1 || d > 31) return null;
+    const t = new Date(y, mo - 1, d);
+    return isNaN(t) ? null : t;
+  };
+  const bad = [];
+  const data = RPT.frontierPrice
+    .map(d => ({ ...d, t: parseDate(d.date) }))
+    .filter(d => { if (!d.t) { bad.push(d); return false; } return true; })
     .sort((a, b) => a.t - b.t);
+  if (bad.length) console.warn("[frontier] 非法日期记录已隔离:", bad.map(d => d.date + " / " + d.label));
+  if (!data.length) return;
   const TCOL = { frontier: P.ink, reasoning: P.blueLo, super: P.blue };
   const TCNL = { frontier: "常规旗舰", reasoning: "推理档", super: "超档" };
 
   const W = 1080, H = 440, ML = 58, MR = 30, TOP = 40, BOT = 48;
   const MIN_W = 760;
-  const t0 = data[0].t, t1 = data[data.length - 1].t;
-  const pad = (t1 - t0) * 0.04;
-  const xOf = t => ML + (t - (t0 - pad)) / ((t1 + pad) - (t0 - pad)) * (W - ML - MR);
+  // 比例尺域一律用毫秒数（Date + number 会字符串拼接，是此前 x 全 NaN 的根因）
+  const t0 = +data[0].t, t1 = +data[data.length - 1].t;
+  const pad = Math.max((t1 - t0) * 0.04, 864e5 * 14); // 至少 ±14 天，防单点/密集数据除零
+  const xOf = t => ML + ((+t) - (t0 - pad)) / ((t1 + pad) - (t0 - pad)) * (W - ML - MR);
   const yOf = p => {  // log10 轴，域 [1, 200]
     const v = Math.min(200, Math.max(1, p));
     return (H - BOT) - Math.log10(v) / Math.log10(200) * (H - BOT - TOP);
@@ -37,6 +53,7 @@
   });
   scroller.appendChild(svg);
   const animated = [];
+  let readoutObstacle = null; // 图内读数框的碰撞障碍（下方标签管理注册）
 
   // ── 价格网格（log）──
   [1, 5, 10, 30, 100, 200].forEach(v => {
@@ -46,8 +63,10 @@
     t.textContent = "$" + v;
     svg.appendChild(t);
   });
-  // ── 时间刻度（每 6 个月）──
-  for (let d = new Date(2024, 4, 1); d <= t1; d = new Date(d.getFullYear(), d.getMonth() + 6, 1)) {
+  // ── 时间刻度（每 6 个月；t1 为毫秒数，+d 显式转数，循环上限兜底）──
+  const t0d = new Date(t0);
+  for (let d = new Date(t0d.getFullYear(), t0d.getMonth(), 1), guard = 0;
+       +d <= t1 && guard < 40; d = new Date(d.getFullYear(), d.getMonth() + 6, 1), guard++) {
     const t = svgEl("text", { x: xOf(d), y: H - BOT + 20, "text-anchor": "middle",
       style: `font:9.5px ${MONO};fill:${P.inkLo}` });
     t.textContent = d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0");
@@ -56,6 +75,13 @@
 
   // ── 谷底参考线（GPT-5 2025-08）──
   const valley = data.find(d => d.label.includes("GPT-5（"));
+  // 当前峰值点（label 含"当前峰值"）
+  const peak = data.find(d => d.label.includes("当前峰值"));
+  // 关键点双价（从 drill.value 解析 "$输入/$输出"，图面即见输出价，不必点开）
+  const dualOf = d => {
+    const m = String(d.drill && d.drill.value || "").match(/\$[\d.]+\s*\/\s*\$[\d.]+/);
+    return m ? m[0].replace(/\s+/g, "") : "$" + d.price;
+  };
   if (valley) {
     const vl = svgEl("line", { x1: xOf(valley.t), x2: xOf(valley.t), y1: TOP - 8, y2: TOP - 8,
       stroke: P.red, "stroke-width": 1, "stroke-dasharray": "3 4" });
@@ -68,6 +94,32 @@
     vt.textContent = "谷底 2025-08 · 此后 V 形反转";
     svg.appendChild(vt);
     animated.push({ start: 1.15, dur: 0.25, set: p => vt.setAttribute("opacity", p) });
+  }
+
+  // ── 图内读数框：谷底 → 当前峰值（右上空区；全部取自数据文本）──
+  if (valley && peak) {
+    const rx = W - MR - 2;
+    const box = svgEl("g", {});
+    svg.appendChild(box);
+    const lines = [
+      { t: "谷底 " + dualOf(valley) + "（" + valley.date + "）→ 当前峰值 " + dualOf(peak) + "（" + peak.date + "）",
+        st: `font:700 10.5px ${MONO};fill:${P.ink}` },
+      { t: "V 形反转后量价齐升 · 价格梯子向两端拉长（脚注）", st: `font:9px ${MONO};fill:${P.inkMd}` },
+      { t: "天花板自历史峰值回落约 87%（o3-pro 注记）", st: `font:9px ${MONO};fill:${P.inkLo}` },
+    ];
+    lines.forEach((ln, i) => {
+      const t = svgEl("text", { x: rx, y: TOP + 8 + i * 14, "text-anchor": "end", style: ln.st });
+      t.textContent = ln.t;
+      box.appendChild(t);
+    });
+    const hrW = 300;
+    const hr = svgEl("line", { x1: rx - hrW, x2: rx, y1: TOP + 8 + lines.length * 14 - 6, y2: TOP + 8 + lines.length * 14 - 6,
+      stroke: P.lineLo, "stroke-width": 1 });
+    box.appendChild(hr);
+    box.setAttribute("opacity", 0);
+    animated.push({ start: 1.25, dur: 0.35, set: p => box.setAttribute("opacity", p) });
+    // 读数框占位（在 placed 初始化后注册为标签碰撞障碍）
+    readoutObstacle = { x0: rx - 330, x1: rx, y0: TOP, y1: TOP + 8 + lines.length * 14 };
   }
 
   // ── 连线（时间序，平滑单调）──
@@ -87,30 +139,82 @@
   path.setAttribute("stroke-dasharray", len);
   animated.push({ start: 0.05, dur: 1.1, set: p => path.setAttribute("stroke-dashoffset", len * (1 - p)) });
 
-  // ── 点 + 标签（同日分组错位）──
+  // ── 点 + 标签（碰撞感知：垂直车道错峰；同日两点强制错道；非关键点无空位则只留点，下钻看全名）──
   const KEY = ["o1-pro（历史峰值）", "GPT-5（旗舰谷底）", "GPT-5.5 Pro（当前峰值）"];
   const dateGroups = {};
   data.forEach(d => { (dateGroups[d.date] = dateGroups[d.date] || []).push(d); });
   const gidx = {};
+  // 文本宽度估算（10px/8.5px 等宽 + CJK 宽字符修正）
+  const estW = (s, fs) => { let n = 0; for (const ch of String(s)) n += ch.charCodeAt(0) > 255 ? 1.7 : 1; return n * fs * 0.62 + 6; };
+  const placed = []; // 已占矩形 {x0,x1,y0,y1}
+  if (readoutObstacle) placed.push(readoutObstacle);
+  const hit = r => placed.some(q => !(r.x1 <= q.x0 || r.x0 >= q.x1 || r.y1 <= q.y0 || r.y0 >= q.y1));
+  const clampX = (cx, half) => Math.min(Math.max(cx, ML + half), W - MR - half);
+  // 预置障碍：谷底注记 + 图例行（避免关键点标签压上去）
+  if (valley) {
+    const hw = estW("谷底 2025-08 · 此后 V 形反转", 9.5) / 2;
+    placed.push({ x0: xOf(valley.t) - hw, x1: xOf(valley.t) + hw, y0: TOP - 22, y1: TOP - 9 });
+  }
+  placed.push({ x0: ML, x1: ML + 3 * 96, y0: TOP - 28, y1: TOP - 13 });
+  // 候选车道：点上方三道 / 下方三道（相对点 cy 的 y 偏移）
+  const LANES = [-12, -25, -38, 22, 35, 48];
   data.forEach((d, i) => {
     const gi = (gidx[d.date] = (gidx[d.date] || 0) + 1) - 1;
     const col = TCOL[d.tier] || P.ink;
     const S = 0.12 + (i / data.length) * 0.9;
+    const isKey = KEY.includes(d.label);
+    const cx = xOf(d.t), cy = yOf(d.price);
     const g = svgEl("g", { style: "cursor:pointer", role: "button", tabindex: "0" });
     svg.appendChild(g);
-    g.appendChild(svgEl("circle", { cx: xOf(d.t), cy: yOf(d.price), r: 14, fill: "transparent" }));
-    const dot = svgEl("circle", { cx: xOf(d.t), cy: yOf(d.price), r: 0,
-      fill: col, stroke: P.paperHi, "stroke-width": 1.5 });
+    g.appendChild(svgEl("circle", { cx, cy, r: 14, fill: "transparent" }));
+    const dot = svgEl("circle", { cx, cy, r: 0, fill: col, stroke: P.paperHi, "stroke-width": 1.5 });
     g.appendChild(dot);
-    animated.push({ start: S, dur: 0.22, set: p => dot.setAttribute("r", (KEY.includes(d.label) ? 5.5 : 4.5) * p) });
-    const isKey = KEY.includes(d.label);
-    const lb = svgEl("text", { x: xOf(d.t), y: yOf(d.price) - 11 - gi * 12, "text-anchor": "middle",
-      style: `font:${isKey ? "700" : "400"} 10px ${MONO};fill:${col}` });
-    lb.textContent = `${d.label.replace(/（.*）/, "")} $${d.price}`;
-    const dt = svgEl("text", { x: xOf(d.t), y: yOf(d.price) + 18 + gi * 10, "text-anchor": "middle",
-      style: `font:8.5px ${MONO};fill:${P.inkLo}` });
-    dt.textContent = `${d.date} · ${TCNL[d.tier] || ""}`;
-    [lb, dt].forEach((el, k) => {
+    animated.push({ start: S, dur: 0.22, set: p => dot.setAttribute("r", (isKey ? 5.5 : 4.5) * p) });
+
+    // 主标签：同日组水平散开（±120px 步进）+ 第 N 点从错开的车道序起步，依次试上/下车道；
+    // 关键点用双价（$输入/$输出，从 drill.value 解析）——输出价不再只藏下钻
+    const grpN = dateGroups[d.date].length;
+    const xOff = grpN > 1 ? (gi - (grpN - 1) / 2) * 120 : 0;
+    const name = `${d.label.replace(/（.*）/, "")} ${isKey ? dualOf(d) : "$" + d.price}`;
+    const hw = estW(name, 10) / 2;
+    const order = LANES.map((_, k) => LANES[(k + gi * 3) % LANES.length]);
+    const labels = [];
+    let chosenDy = null;
+    for (const dy of order) {
+      const lx = clampX(cx + xOff, hw);
+      const r = { x0: lx - hw, x1: lx + hw, y0: cy + dy - 10, y1: cy + dy + 3 };
+      if (r.y0 < 4 || r.y1 > H - BOT - 2) continue; // 不出绘图区
+      if (!hit(r)) {
+        const lb = svgEl("text", { x: lx, y: cy + dy, "text-anchor": "middle",
+          style: `font:${isKey ? "700" : "400"} 10px ${MONO};fill:${col}` });
+        lb.textContent = name;
+        placed.push(r); labels.push(lb); chosenDy = dy;
+        break;
+      }
+    }
+    if (chosenDy === null && isKey) { // 关键点强制落最上车道（钳入绘图区）
+      const lx = clampX(cx + xOff, hw);
+      const fy = Math.max(cy - 38, 14);
+      const lb = svgEl("text", { x: lx, y: fy, "text-anchor": "middle",
+        style: `font:700 10px ${MONO};fill:${col}` });
+      lb.textContent = name;
+      placed.push({ x0: lx - hw, x1: lx + hw, y0: fy - 10, y1: fy + 3 });
+      labels.push(lb); chosenDy = fy - cy;
+    }
+    // 日期副标签：主标签在点上 → 日落点下（+18）；主标签在点下 → 跟随主标签下一行。
+    // 关键点必落，非关键点仅在不碰撞时落
+    const sub = `${d.date} · ${TCNL[d.tier] || ""}`;
+    const shw = estW(sub, 8.5) / 2;
+    const sDy = chosenDy === null ? 18 : (chosenDy < 0 ? 18 : chosenDy + 13);
+    const sr = { x0: clampX(cx + xOff, shw) - shw, x1: clampX(cx + xOff, shw) + shw, y0: cy + sDy - 9, y1: cy + sDy + 2 };
+    if ((isKey || !hit(sr)) && sr.y0 > 4 && sr.y1 < H - 2) {
+      const dt = svgEl("text", { x: clampX(cx + xOff, shw), y: cy + sDy, "text-anchor": "middle",
+        style: `font:8.5px ${MONO};fill:${P.inkLo}` });
+      dt.textContent = sub;
+      if (isKey) placed.push(sr);
+      labels.push(dt);
+    }
+    labels.forEach((el, k) => {
       g.appendChild(el); el.setAttribute("opacity", 0);
       animated.push({ start: S + 0.08 + k * 0.04, dur: 0.22, set: p => el.setAttribute("opacity", p) });
     });

@@ -70,6 +70,11 @@
       .attr("style", "font:700 12.5px " + U.FONTS.mono + ";fill:" + (ghost ? P.inkMd : P.blue))
       .attr("opacity", 0).text(c.display);
     animated.push({ start: 0.55 + i * 0.1, dur: 0.25, set: p => lb.attr("opacity", p) });
+    // 基数行（原只藏下钻"基数："）：条下一行小字
+    const bs = svg.append("text").attr("x", ML).attr("y", gy + bh + 12)
+      .attr("style", "font:8.5px " + U.FONTS.mono + ";fill:" + P.inkLo)
+      .attr("opacity", 0).text("基数：" + c.base);
+    animated.push({ start: 0.65 + i * 0.1, dur: 0.25, set: p => bs.attr("opacity", p) });
     const hit = svg.append("rect")
       .attr("x", 0).attr("y", gy - 4).attr("width", W).attr("height", ROW)
       .attr("fill", "transparent").style("cursor", "pointer");

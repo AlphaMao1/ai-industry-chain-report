@@ -22,6 +22,16 @@
     const m = String(s).match(/^(\d{4})(?:-(\d{2}))?/);
     return new Date(+m[1], m[2] ? +m[2] - 1 : 0, 1);
   };
+  // 端点第三行注记：从 note/drill.sub 提取口径警示（减速/未经审计/未核验），提到图面
+  const caveatOf = a => {
+    const s = String(a.note || "") + " " + String(a.drill && a.drill.sub || "");
+    const hits = [];
+    [/锚点在减速/, /明显减速/, /口径是否含缓存[^；。]*/, /未经独立核验/, /未经审计/, /泄露口径/].forEach(re => {
+      const m = s.match(re);
+      if (m && !hits.includes(m[0])) hits.push(m[0]);
+    });
+    return hits.slice(0, 2).join(" · ");
+  };
   const series = A.map(a => ({
     a,
     pts: a.points.map(p => ({ d: parseDate(p.date), v: p.value, rel: p.value / a.points[0].value, date: p.date })),
@@ -110,6 +120,16 @@
       .text(`${fmtNum(last.v)} ${s.a.unit} · ${last.date}`);
     animated.push({ start: S + 0.85, dur: 0.3, set: t => { l1.attr("opacity", t); l2.attr("opacity", t); } });
     [l1, l2].forEach(l => l.style("cursor", "pointer").on("click", e => drill(last, e)));
+    // 第三行：口径警示（减速/未经审计/未核验，原只藏悬停与下钻）
+    const cav = caveatOf(s.a);
+    if (cav) {
+      const l3 = svg.append("text")
+        .attr("x", x(last.d) + 12).attr("y", y(last.rel) + 26 + dy)
+        .attr("style", `font:8.5px ${U.FONTS.mono};fill:${P.inkMd}`).attr("opacity", 0)
+        .text(cav);
+      animated.push({ start: S + 0.92, dur: 0.3, set: t => l3.attr("opacity", t) });
+      l3.style("cursor", "pointer").on("click", e => drill(last, e));
+    }
   });
 
   // 图例（左上）

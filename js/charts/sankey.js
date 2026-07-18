@@ -12,7 +12,7 @@
 
   const body = U.frame(host, {
     title: "算力开支传导：模型公司的成本，是上游各层的收入",
-    sub: "缎带宽度为结构示意（不按金额精确比例）· 两条粗带标有承诺额 · 点缎带或节点下钻",
+    sub: "最宽带 = 含承诺额（$300B）· 其余带标「结构示意」· 点缎带或节点下钻",
     src: SRC,
   });
 
@@ -99,17 +99,42 @@
     })
     .on("mouseleave", function () { d3.select(this).attr("opacity", 0.2); U.hideTip(); })
     .on("click", (e, f) => U.showDrill({
-      title: f.from + " → " + f.to, value: f.label,
-      sub: SK.note, source: SRC, x: e.clientX, y: e.clientY }));
+      title: f.from + " → " + f.to,
+      value: /\$\s*[\d.]+/.test(f.label) ? f.label
+        : f.label + "（结构示意，未披露金额）",
+      sub: SK.note + " 缎带宽度仅分档作结构呈现，不按金额精确比例。", source: SRC, x: e.clientX, y: e.clientY }));
 
-  // 两条粗带的中点标签（有承诺额者）
-  flows.filter(f => f.t >= 12).forEach(f => {
-    const sx = COLX[NODE[f.from].col][1], tx = COLX[NODE[f.to].col][0];
-    svg.append("text").attr("x", (sx + tx) / 2).attr("y", (f.sy + f.ty) / 2 - f.t / 2 - 6)
-      .attr("text-anchor", "middle")
-      .attr("style", "font:700 10.5px " + U.FONTS.mono + ";fill:" + P.blue)
-      .text(f.label);
-  });
+  // 缎带中点标签：宽带标金额/承诺额（数据 label 有则取），无金额者标"结构示意"；
+  // 细带小字标签纵向贪心避让（间距 <11px 的下压，压出图外则舍弃，全名仍在点击下钻）
+  {
+    const cands = flows.map(f => {
+      const sx = COLX[NODE[f.from].col][1], tx = COLX[NODE[f.to].col][0];
+      const hasAmt = /\$\s*[\d.]+/.test(f.label);
+      const big = f.t >= 12;
+      return {
+        x: (sx + tx) / 2, y: (f.sy + f.ty) / 2 - f.t / 2 - (big ? 7 : 5), t: f.t,
+        txt: big ? f.label : (hasAmt ? f.label : f.label + " · 结构示意"),
+        big, keep: true,
+      };
+    });
+    // 同一 x 桶内按 y 排序，强制 ≥11px 间隔
+    const buckets = {};
+    cands.forEach(c => { (buckets[Math.round(c.x / 40)] = buckets[Math.round(c.x / 40)] || []).push(c); });
+    Object.values(buckets).forEach(list => {
+      list.sort((a, b) => a.y - b.y);
+      for (let i = 1; i < list.length; i++) {
+        if (list[i].y < list[i - 1].y + 11) list[i].y = list[i - 1].y + 11;
+        if (list[i].y > H - 14) list[i].keep = false;
+      }
+    });
+    cands.filter(c => c.keep).forEach(c => {
+      svg.append("text").attr("x", c.x).attr("y", c.y)
+        .attr("text-anchor", "middle")
+        .attr("style", "font:" + (c.big ? 700 : 400) + " " + (c.big ? 10.5 : 8.5) + "px " + U.FONTS.mono +
+          ";fill:" + (c.big ? P.blue : P.inkMd))
+        .text(c.txt);
+    });
+  }
 
   // ── 节点 ──
   const gN = svg.append("g");
@@ -140,9 +165,13 @@
   ];
   U.play(animated, svg.node(), { threshold: 0.2 });
 
-  // 口径图注
+  // 口径图注 + 带宽编码说明（图面自明，不靠下钻）
   const note = document.createElement("p");
   note.style.cssText = "margin:10px 0 0;font:10.5px " + U.FONTS.mono + ";color:" + P.inkLo + ";line-height:1.7";
   note.textContent = "注：" + SK.note;
   body.appendChild(note);
+  const enc = document.createElement("p");
+  enc.style.cssText = "margin:6px 0 0;font:10.5px " + U.FONTS.mono + ";color:" + P.inkLo + ";line-height:1.7";
+  enc.textContent = "带宽编码：最宽带 = 含承诺额的流向（约 $300B，OpenAI→Oracle）；次宽带 = 大额云合同（金额未披露，标「结构示意」）；细带 = 结构连接。不按金额精确比例。";
+  body.appendChild(enc);
 })();

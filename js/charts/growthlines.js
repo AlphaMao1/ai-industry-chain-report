@@ -84,7 +84,9 @@
       .map(v => `<span class="gl-ggrid" style="left:${(v / G_MAX * 100).toFixed(1)}%"></span>` +
         `<span class="gl-gtick" style="left:${(v / G_MAX * 100).toFixed(1)}%">${v}x</span>`).join("");
     row.innerHTML =
-      `<div><div class="gl-name">${U.esc(l.name)}${isKey ? '<span class="gl-tag">承重假设</span>' : ""}</div></div>` +
+      `<div><div class="gl-name">${U.esc(l.name)}${isKey ? '<span class="gl-tag">承重假设</span>' : ""}</div>` +
+      `<div style="font-family:var(--mono);font-size:9px;color:${isKey ? "var(--blue)" : "var(--ink-lo)"};margin-top:3px">` +
+      `基准 ${l.base.toFixed(1)}x（区间 ${l.low}–${l.high}）· 贡献 ${U.esc(l.shareA)}</div></div>` +
       `<div class="gl-track"><div class="gl-bar" style="width:${wPctOfMax}%;background:${barCol};opacity:${isKey ? .92 : .72}">` +
       `<span class="gl-wlab ${wlabOut ? "out" : ""}">权重 ${U.esc(l.weightDisplay)}</span></div></div>` +
       `<div class="gl-gtrack">${gridTicks}` +

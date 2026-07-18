@@ -8,7 +8,7 @@
   if (!host || !window.RPT || !RPT.relay) return;
   const body = U.frame(host, {
     title: "四棒接力 · 稀缺利润沿 GPU → 内存 → 先进封装 → 电力单向迁移",
-    sub: "2022→2030 · 色带内 = 在位者 · 带下两行 = 利润峰值 / 迁移触发 · 点击色带下钻 · 电蓝 = 当前接棒",
+    sub: "2022→2030 · 色带内 = 在位者 · 带下两行 = 利润峰值 / 迁移触发 · 点击色带带下展开全文 · 电蓝 = 当前接棒",
     src: "官方披露 · 行业机构 · 券商研究",
   });
 
@@ -87,6 +87,28 @@
     animated.push({ start: 1.4, dur: 0.4, set: p => { now.setAttribute("opacity", p); nl.setAttribute("opacity", p); } });
   }
 
+  // 文本量宽与折行（带下展开全文用）
+  const mc = document.createElement("canvas").getContext("2d");
+  const wrap = (s, font, maxW, maxLines) => {
+    mc.font = font;
+    const lines = [];
+    let cur = "";
+    for (const ch of String(s)) {
+      if (cur && mc.measureText(cur + ch).width > maxW) {
+        lines.push(cur); cur = ch;
+        if (lines.length === maxLines) {
+          while (cur && mc.measureText(lines[maxLines - 1] + "…").width > maxW)
+            lines[maxLines - 1] = lines[maxLines - 1].slice(0, -1);
+          lines[maxLines - 1] += "…";
+          return lines;
+        }
+      } else cur += ch;
+    }
+    if (cur) lines.push(cur);
+    return lines;
+  };
+  let expanded = -1; // 当前带下展开的棒次索引
+
   // ── 四条接力色带 ──
   legs.forEach(leg => {
     const y0 = TOP + leg.i * LANE;
@@ -134,7 +156,7 @@
       animated.push({ start: 0.5 + leg.i * 0.35, dur: 0.3, set: p => d.setAttribute("opacity", p) });
     }
 
-    // 带下两行：利润峰值 / 迁移触发（图面截断，全文在下钻）
+    // 带下两行：利润峰值 / 迁移触发（默认截断一行；点击色带在带下原位展开全文）
     const a1 = S("text", { x: bx0 + 2, y: y0 + BAND_H + 17,
       style: `font:9.5px ${MONO};fill:${P.inkMd}` });
     a1.textContent = "利润峰值  " + trunc(leg.profitPeak, 62);
@@ -147,11 +169,41 @@
       animated.push({ start: 0.75 + leg.i * 0.35 + k * 0.08, dur: 0.35, set: p => t.setAttribute("opacity", p) });
     });
 
-    // 点击下钻（色带 + 注记行共用）
-    const drill = e => U.showDrill({
-      title: leg.drill.title, value: leg.drill.value, sub: leg.drill.sub,
-      source: leg.drill.source, x: e.clientX, y: e.clientY });
-    [band, a1, a2].forEach(el => el.addEventListener("click", drill));
+    // 带下原位展开区：关键读数 + 峰值全文 + 触发全文（取代弹卡；宽度可用到本行右缘）
+    const det = S("g", { opacity: 0, "pointer-events": "none" });
+    {
+      const availW = W - MR - (bx0 + 2);
+      const F1 = `700 9.5px ${MONO}`, F2 = `9.5px ${MONO}`;
+      const rows = [];
+      wrap("关键读数  " + leg.drill.value, F1, availW, 1).forEach(t => rows.push({ t, st: `font:700 9.5px ${MONO};fill:${P.blue}` }));
+      wrap("利润峰值  " + leg.profitPeak, F2, availW, 2).forEach(t => rows.push({ t, st: `font:9.5px ${MONO};fill:${P.inkMd}` }));
+      wrap("迁移触发  " + leg.trigger, F2, availW, 2).forEach(t => rows.push({ t, st: `font:9.5px ${MONO};fill:${P.inkLo}` }));
+      rows.slice(0, 5).forEach((r, k) => {
+        const tx = S("text", { x: bx0 + 2, y: y0 + BAND_H + 15 + k * 11.5, style: r.st });
+        tx.textContent = r.t;
+        det.appendChild(tx);
+      });
+      // 展开区底衬：便于与下一棒视觉分隔（发丝线，非卡片）
+      const hr = S("line", { x1: bx0, x2: Math.min(bx1, W - MR), y1: y0 + LANE - 3, y2: y0 + LANE - 3,
+        stroke: P.lineLo, "stroke-width": 1 });
+      det.appendChild(hr);
+    }
+    svg.appendChild(det);
+
+    // 点击色带/注记行 → 带下原位展开（再点收起，切棒自动收起上一棒）
+    const toggle = () => {
+      expanded = expanded === leg.i ? -1 : leg.i;
+      legs.forEach(L => {
+        const on = expanded === L.i;
+        L._det.setAttribute("opacity", on ? 1 : 0);
+        L._det.setAttribute("pointer-events", "none");
+        [L._a1, L._a2].forEach(t => t.setAttribute("opacity", on ? 0 : 1));
+        L._band.setAttribute("stroke", on ? P.ink : "none");
+        L._band.setAttribute("stroke-width", on ? 1.4 : 0);
+      });
+    };
+    leg._det = det; leg._a1 = a1; leg._a2 = a2; leg._band = band;
+    [band, a1, a2].forEach(el => el.addEventListener("click", toggle));
   });
 
   // ── B 面注记（并列，不藏）：HBM 晶圆收入被普通内存反超 ──

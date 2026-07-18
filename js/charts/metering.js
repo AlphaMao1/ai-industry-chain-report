@@ -8,7 +8,7 @@
   const MT = RPT.metering;
   const body = U.frame(host, {
     title: "计量方式三层站位：按量 / 按任务量 / 席位",
-    sub: "三列收敛中 · 当前赢家是混合制 · 待核 = 券商研究转述未独立核验 · 点击任意落位下钻",
+    sub: "三列收敛中 · 当前赢家是混合制 · 待核 = 券商研究转述未独立核验 · 点击任意落位原位展开口径注",
     src: "官方披露 · 券商研究",
   });
 
@@ -46,6 +46,16 @@
   #chart-metering .mt-pchip:hover { background:var(--paper-hi); }
   #chart-metering .mt-pyear { font-family:var(--mono); font-size:10px; font-weight:700; color:var(--ink); }
   #chart-metering .mt-pname2 { font-family:var(--serif); font-size:11.5px; color:var(--ink-md); margin-top:2px; }
+  #chart-metering .mt-player .mt-caret { font-family:var(--mono); font-size:9px; color:var(--ink-lo);
+    display:inline-block; transition:transform .22s ease; }
+  #chart-metering .mt-player.open .mt-caret { transform:rotate(90deg); color:var(--blue); }
+  #chart-metering .mt-player.open { background:var(--paper-hi); }
+  #chart-metering .mt-px { max-height:0; overflow:hidden; transition:max-height .3s ease; }
+  #chart-metering .mt-player.open .mt-px { max-height:220px; }
+  #chart-metering .mt-px-note { font-size:11.5px; color:var(--ink-md); line-height:1.65; margin-top:8px;
+    border-top:1px dashed var(--line-lo); padding-top:7px; }
+  #chart-metering .mt-px-meta { font-family:var(--mono); font-size:9px; color:var(--ink-lo); line-height:1.7;
+    margin-top:6px; }
   `;
   const st = document.createElement("style"); st.textContent = css; document.head.appendChild(st);
 
@@ -76,16 +86,22 @@
       const el = document.createElement("div");
       el.className = "mt-player";
       const pending = pl.status === "待核";
+      el.setAttribute("data-drill-keep", "1");
+      el.setAttribute("role", "button");
+      el.tabIndex = 0;
+      // 原位展开：价格/日期已在卡面，展开给口径注（note）+ 状态与来源级别
       el.innerHTML =
-        `<div class="mt-pname"><span>${U.esc(pl.name)}</span>` +
+        `<div class="mt-pname"><span>${U.esc(pl.name)} <span class="mt-caret">▸</span></span>` +
         `<span class="mt-badge${pending ? " pending" : ""}">${pending ? "待核" : U.esc(pl.status)}</span></div>` +
         `<div class="mt-price">${U.esc(pl.price)}</div>` +
-        `<div class="mt-date">${U.esc(pl.date)}</div>`;
-      bind(el, {
-        title: pl.name + " · " + tier.name,
-        value: pl.price,
-        sub: pl.note + "（时间：" + pl.date + "）",
-        source: pending ? "券商研究 · 待核" : "官方披露 · " + pl.date,
+        `<div class="mt-date">${U.esc(pl.date)}</div>` +
+        `<div class="mt-px"><div class="mt-px-note">${U.esc(pl.note)}</div>` +
+        `<div class="mt-px-meta">状态：${pending ? "券商研究转述，未独立核验（待核）" : "官方披露"} · 时间：${U.esc(pl.date)}<br/>` +
+        `${U.esc(U.fmtSrc(pending ? "券商研究 · 待核" : "官方披露 · " + pl.date))} · 再次点击收起</div></div>`;
+      const toggle = () => el.classList.toggle("open");
+      el.addEventListener("click", toggle);
+      el.addEventListener("keydown", e => {
+        if (e.key === "Enter" || e.key === " ") { e.preventDefault(); toggle(); }
       });
       col.appendChild(el);
     });
@@ -109,7 +125,13 @@
     d.className = "mt-nrow";
     d.innerHTML = `<div class="mt-ntag">计量漂移警示</div>` +
       `<div class="mt-ntxt">${U.esc(MT.drift.text)}</div>`;
-    bind(d, { title: "计量漂移警示", value: MT.drift.text, source: MT.drift.source });
+    // sub 补全：任务量单位口径释义取自数据（Agentforce 玩家注记），不新造
+    const actNote = (MT.tiers.find(t => t.id === "task") || {}).players || [];
+    const agentforce = actNote.find(p => /Agentforce/.test(p.name));
+    bind(d, { title: "计量漂移警示", value: MT.drift.text,
+      sub: (agentforce ? "任务量单位释义：" + agentforce.note + " " : "") +
+        "边际汇率在漂移且口径曾扩围——token 增速与任务量单位增速不可直接互证。",
+      source: MT.drift.source });
     note.appendChild(d);
   }
 

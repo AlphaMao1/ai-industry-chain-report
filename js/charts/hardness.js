@@ -21,7 +21,7 @@
   const bars = RPT.hardness.bars;
   const CHIP = 2; // 前两条为芯片链（蓝族），其余为电力交付链（墨）
   const W = 1080, ML = 196, MR = 128, TOP = 46, ROW = 56;
-  const H = TOP + bars.length * ROW + 96;
+  const H = TOP + bars.length * ROW + 96 + (RPT.hardness.bside ? 56 : 0);
   const x = d3.scaleLog().domain([4, 520]).range([ML, W - MR]);
   const trunc = (s, n) => { s = String(s || ""); return s.length > n ? s.slice(0, n) + "…" : s; };
 
@@ -72,7 +72,7 @@
     if (i > 0) g.append("line").attr("x1", ML - 150).attr("x2", W - MR)
       .attr("y1", -6).attr("y2", -6).attr("stroke", P.lineLo);
 
-    // 左槽：环节名 + 注（截断）
+    // 左槽：环节名 + 注（两行截断，全文在下钻）
     g.append("text").attr("x", ML - 14).attr("y", yC - 1)
       .attr("text-anchor", "end")
       .attr("style", `font:700 12.5px ${SERIF};fill:${P.ink}`)
@@ -80,7 +80,7 @@
     g.append("text").attr("x", ML - 14).attr("y", yC + 15)
       .attr("text-anchor", "end")
       .attr("style", `font:8.5px ${MONO};fill:${P.inkLo}`)
-      .text(trunc(d.note, 16));
+      .text(trunc(d.note, 24));
 
     // 条体（生长动画）
     const bar = g.append("rect")
@@ -124,11 +124,30 @@
 
     g.on("click", e => U.showDrill({
       title: "瓶颈硬度 · " + d.item,
-      value: "交期 " + d.display,
+      value: "交期 " + d.display + "（" + trunc(d.note, 26) + "）",
       sub: d.note,
-      source: "行业机构 · 官方披露 · 券商研究",
+      source: "行业机构 · 官方披露 · 券商研究 · 截至 2026-07-17",
       x: e.clientX, y: e.clientY }));
   });
+
+  // ── B 面注记（并列，不藏）：HBM 每片晶圆收入已被普通服务器内存条反超 ──
+  const bs = String(RPT.hardness.bside || "");
+  if (bs) {
+    const wParts = String(RPT.hardness.waferNote || "").match(/[^；。]+[；。]?/g) || [];
+    const ny = TOP + bars.length * ROW + 22 + 20 + Math.max(0, wParts.length - 1) * 15 + 10;
+    svg.append("line").attr("x1", ML - 150).attr("x2", W - MR)
+      .attr("y1", ny - 12).attr("y2", ny - 12).attr("stroke", P.lineLo);
+    const parts2 = bs.match(/[^；。]+[；。]?/g) || [];
+    parts2.forEach((pt, k) => {
+      const t = svg.append("text")
+        .attr("x", ML - 150).attr("y", ny + 4 + k * 15)
+        .attr("style", `font:9.5px ${MONO};fill:${P.inkMd}`);
+      if (k === 0) {
+        t.append("tspan").attr("style", `font-weight:700;fill:${P.red}`).text("B 面  ");
+        t.append("tspan").text(pt.replace(/^B 面：/, ""));
+      } else t.text(pt);
+    });
+  }
 
   // ── 晶圆损耗注（两个口径并列，按句折行、保留句读）──
   const wn = String(RPT.hardness.waferNote || "");

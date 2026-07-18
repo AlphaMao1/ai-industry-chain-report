@@ -32,12 +32,24 @@
   };
   const PLAQUES = RPT.timeline.map((t, i) => ({ ...t, i, yr: dec(t.y) }));
 
-  const PH = 48, TIER_GAP = 12, TIER_H = PH + TIER_GAP, TOP = 18, AXIS_GAP = 14;
+  const PH = 60, TIER_GAP = 12, TIER_H = PH + TIER_GAP, TOP = 18, AXIS_GAP = 14;
   const X0 = 2022.85, X1 = 2026.95, ML = 18, MR = 18, GAP = 10;
   const MIN_W = 680;
 
   const mc = document.createElement("canvas").getContext("2d");
   const nameW = s => { mc.font = "700 12px " + SERIF; return mc.measureText(s).width; };
+  const statW = s => { mc.font = "700 8.5px " + MONO; return mc.measureText(s).width; };
+  // 从下钻 value 解析牌匾读数行（分数→%→倍数/GW/天/万亿→$额→引语→关键词→截断；全部取自数据文本）
+  const statOf = v => {
+    const s = String(v || "");
+    let m = s.match(/\d+\s*\/\s*\d+/); if (m) return m[0];
+    m = s.match(/[+−-]?\d[\d,.]*\s*%/); if (m) return m[0];
+    m = s.match(/[+−]?\d[\d,.]*\s*(?:倍|GW|万亿|天)/); if (m) return m[0];
+    m = s.match(/\$[\d.,/–—\s-]*\d\s*[BTM]?/); if (m) return m[0].trim();
+    m = s.match(/'[^']+'|“[^”]+”/); if (m) return m[0];
+    m = s.match(/全部售罄|售罄|停售|插不上电/); if (m) return m[0];
+    return s.length > 12 ? s.slice(0, 12) + "…" : s;
+  };
   // 双行标签的折行点（优先在 "·" 或空格处折，否则 13 字硬折）
   const splitLabel = s => {
     if (nameW(s) <= 168) return [s, ""];
@@ -59,10 +71,12 @@
     const W = Math.min(1150, Math.max(MIN_W, body.getBoundingClientRect().width - 4));
     const xOf = yr => ML + (yr - X0) / (X1 - X0) * (W - ML - MR);
 
-    // 贪心分层：按时间升序，放进不叠压的最低层
+    // 贪心分层：按时间升序，放进不叠压的最低层（宽 = 标签与读数行的最大者）
     const ps = PLAQUES.map(p => {
       const [l1, l2] = splitLabel(p.label);
-      return { ...p, l1, l2, w: Math.max(120, Math.ceil(Math.max(nameW(l1), nameW(l2))) + 22) };
+      const stat = p.drill && p.drill.value ? statOf(p.drill.value) : "";
+      return { ...p, l1, l2, stat,
+        w: Math.max(120, Math.ceil(Math.max(nameW(l1), nameW(l2), stat ? statW(stat) + 4 : 0)) + 22) };
     }).sort((a, b) => a.yr - b.yr || a.i - b.i);
     const tiers = [];
     ps.forEach(p => {
@@ -148,7 +162,10 @@
       nm.textContent = p.l1;
       const nm2 = svgEl("text", { x: p.x + 10, y: py + 42, style: `font:700 12px ${SERIF};fill:${c}` });
       nm2.textContent = p.l2;
-      [ey, kd, nm, nm2].forEach(t => {
+      // 读数行：牌匾第三行，把下钻里的头条数字提到图面
+      const stT = svgEl("text", { x: p.x + 10, y: py + (p.l2 ? 55 : 48), style: `font:700 8.5px ${MONO};fill:${P.inkMd}` });
+      stT.textContent = p.stat;
+      [ey, kd, nm, nm2, stT].forEach(t => {
         g.appendChild(t); t.setAttribute("opacity", 0);
         animated.push({ start: S + 0.25, dur: 0.28, set: q => { t.setAttribute("opacity", q); } });
       });

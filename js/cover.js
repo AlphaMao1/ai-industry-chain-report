@@ -18,16 +18,28 @@
   ];
 
   // 防御性读取：优先 RPT.strata；其次由 RPT.profitPool.layers 派生；最后硬编码兜底
+  // 注意：data.js 的 strata 字段为 shareBase/valueBase/name/drill/negative（非 share/val）
   function readStrata() {
     const R = window.RPT;
     if (R && Array.isArray(R.strata) && R.strata.length >= 2) {
-      return R.strata.map((s, i) => ({
-        id: s.id || "layer" + i,
-        name: s.name || "",
-        share: typeof s.share === "number" ? s.share : parseFloat(s.share) || 0,
-        val: s.val || s.value || "",
-        drill: s.drill || null,
-      }));
+      return R.strata.map((s, i) => {
+        // 字段兜底链：shareBase → share；valueBase → val/value；任一环缺失再退回 FALLBACK 同位项
+        const fb = FALLBACK[i] || {};
+        let share = typeof s.shareBase === "number" ? s.shareBase
+          : (typeof s.share === "number" ? s.share : parseFloat(s.shareBase != null ? s.shareBase : s.share));
+        if (!isFinite(share)) share = typeof fb.share === "number" ? fb.share : 0;
+        const vb = s.valueBase != null ? s.valueBase : (s.val != null ? s.val : s.value);
+        const val = typeof vb === "number" ? (vb < 0 ? "−$" + Math.abs(vb) + "B/季" : "$" + vb + "B/季")
+          : (vb || fb.val || "");
+        return {
+          id: s.id || fb.id || "layer" + i,
+          name: s.name || fb.name || "",
+          share,
+          val,
+          negative: s.negative === true || share < 0,
+          drill: s.drill || null,
+        };
+      });
     }
     if (R && R.profitPool && Array.isArray(R.profitPool.layers) && R.profitPool.layers.length >= 2) {
       return R.profitPool.layers.map(l => ({

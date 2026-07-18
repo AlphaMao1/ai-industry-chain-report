@@ -27,28 +27,31 @@
     .attr("data-drill-keep", "1")
     .style("cursor", "pointer");
 
-  // 仪表角度：canvas/d3-path 约定（0 = 正上方，顺时针为正）
-  // f: 0→1 映射 左端→顶端→右端；a(f) = π·(f − 0.5)
+  // 仪表角度（上半圆约定）：f: 0→1 映射 左端→顶端→右端
+  // pt() 用 a(f) = π·(f − 0.5)（0 = 正上方，顺时针为正）——用于刻度与指针，保持不变；
+  // d3-path/canvas 的 arc 用 a2(f) = π·(1 + f)（0 = 正右方，y 轴向下顺时针为正，
+  // f=0 → π = 左端，f=0.5 → 3π/2 = 顶端，f=1 → 2π = 右端）——两者同构于上半圆。
   const a = f => Math.PI * (f - 0.5);
+  const a2 = f => Math.PI * (1 + f);
   const pt = (f, r) => [CX + Math.sin(a(f)) * r, CY - Math.cos(a(f)) * r];
 
-  // 底弧（墨浅）+ 警示带 + 读数弧，统一用描边弧绘制（顺时针增大角度）
+  // 底弧（墨浅）+ 警示带 + 读数弧，统一用描边弧绘制（顺时针增大角度，上半圆约定 a2）
   const arcLine = (f0, f1, col, wdt, op) => {
     const p = d3.path();
-    p.arc(CX, CY, R - 13, a(f0), a(f1), false);
+    p.arc(CX, CY, R - 13, a2(f0), a2(f1), false);
     svg.append("path")
       .attr("d", p.toString())
       .attr("fill", "none").attr("stroke", col).attr("stroke-width", wdt)
       .attr("opacity", op == null ? 1 : op);
   };
   arcLine(0, 1, P.lineLo, 26);
-  arcLine(0, 0.1, P.redSoft, 26); // 个位数警示带
+  arcLine(0, 0.1, P.redSoft, 26); // 个位数警示带（左起 0→10% 区段）
   // 读数弧（0→6%），生长动画
   const valPath = svg.append("path")
     .attr("fill", "none").attr("stroke", P.red).attr("stroke-width", 26);
   const setValArc = f => {
     const p = d3.path();
-    if (f > 0.0005) p.arc(CX, CY, R - 13, a(0), a(f), false);
+    if (f > 0.0005) p.arc(CX, CY, R - 13, a2(0), a2(f), false);
     valPath.attr("d", p.toString());
   };
 

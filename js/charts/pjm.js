@@ -147,11 +147,25 @@
       .text(isNull ? "上限 $" + newCap + "（触顶示意）" : "$" + d.price);
     animated.push({ start: 0.4 + i * 0.25, dur: 0.3, set: p => vl.attr("opacity", p) });
 
-    // 轮次下钻（缺口双口径在 note 内）
+    // 缺口/备用率读数（从轮次注记解析，提到图面；原只藏下钻）
+    const gapM = String(d.note || "").match(/缺口\s*([\d,]+\s*MW)/);
+    const rsvM = String(d.note || "").match(/备用率\s*([\d.]+%)/);
+    if (gapM || rsvM) {
+      const tag = [gapM ? "缺口 " + gapM[1].replace(/\s+/g, "") : null, rsvM ? "备用率 " + rsvM[1] : null]
+        .filter(Boolean).join(" · ");
+      const nt = svg.append("text")
+        .attr("x", cx + 11).attr("y", y(cyv) + 16)
+        .attr("style", `font:9px ${MONO};fill:${P.inkMd}`).attr("opacity", 0)
+        .text(tag);
+      animated.push({ start: 0.5 + i * 0.25, dur: 0.3, set: p => nt.attr("opacity", p) });
+    }
+
+    // 轮次下钻（缺口双口径在 note 内）；首轮 note 为空 → sub 补全为分段对照（取自数据 segments）
+    const segCtx = (RPT.pjm.segments || []).map(s2 => s2.label).join("；");
     const drill = e => U.showDrill({
       title: "PJM 容量拍卖 · " + d.auction + " 年度",
       value: isNull ? "连续第四次触顶（清算价未单列，见注记）" : "$" + d.price + "/MW-day",
-      sub: d.note || undefined,
+      sub: d.note || ("起点轮次。分段对照：" + segCtx + "。" + RPT.pjm.drill.sub),
       source: RPT.pjm.drill.source,
       x: e.clientX, y: e.clientY });
     dot.on("click", drill);

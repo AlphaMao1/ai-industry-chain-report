@@ -107,7 +107,26 @@
     defs.appendChild(pat);
     svg.appendChild(defs);
 
-    // ── 阶梯：档 i 平台高度逐级上移 ──
+    // 档级读数（把下钻里的头条倍数/实例提到图面；全部从 drill 文本解析）
+  const statOf = t => {
+    const v = String(t.drill.value || ""), s = String(t.drill.sub || "");
+    let m = v.match(/[≈约]?\s*[\d,.]+\s*倍/g);
+    if (m) return m.slice(0, 2).map(x => x.trim().replace(/\s+/g, "")).join(" · ");
+    m = v.match(/[\d,.]+\s*亿\s*token/g);
+    if (m) return m.slice(0, 2).join(" · ");
+    m = s.match(/例如[^。]*|约相当于[^。]*|方差[^。]*80%[^。]*/);
+    if (m) return m[0];
+    return "";
+  };
+  const mcStat = document.createElement("canvas").getContext("2d");
+  const truncW = (s, font, maxW) => {
+    mcStat.font = font;
+    let out = s;
+    while (out.length > 2 && mcStat.measureText(out + "…").width > maxW) out = out.slice(0, -1);
+    return out === s ? s : out + "…";
+  };
+
+  // ── 阶梯：档 i 平台高度逐级上移 ──
     const STEP = 56, BAR_H = 42;
     const baseY = AXIS_Y - 14;
     const tiers = TS.tiers;
@@ -156,6 +175,32 @@
         g.appendChild(el); el.setAttribute("opacity", 0);
         animated.push({ start: S + 0.25 + k * 0.06, dur: 0.25, set: p => el.setAttribute("opacity", p) });
       });
+
+      // 档级读数：平台右缘外侧（含浪费模式下让过斜纹延展区；宽度不够自动截断或落到平台上方间隙）
+      const stat = statOf(t);
+      if (stat) {
+        const xEnd = gross ? xOf(Math.min(X1, t.logMax + dexOf(wasteHi))) : x1;
+        const nextX = i < tiers.length - 1 ? xOf(tiers[i + 1].logMin) : xOf(X1);
+        const sx = xEnd + 7;
+        const maxW = Math.max(0, nextX - sx - 8);
+        let stT = null;
+        if (maxW > 46) {
+          stT = svgEl("text", { x: sx, y: yTop + BAR_H / 2 + 3.5,
+            style: `font:9px ${MONO};fill:${i >= tiers.length - 2 ? P.blue : P.inkMd}` });
+          stT.textContent = truncW(stat, `9px ${MONO}`, maxW);
+        } else {
+          const mw2 = Math.max(0, nextX - x0 - 16);
+          if (mw2 > 60) {
+            stT = svgEl("text", { x: x0 + 6, y: yTop - 6,
+              style: `font:9px ${MONO};fill:${i >= tiers.length - 2 ? P.blue : P.inkMd}` });
+            stT.textContent = truncW(stat, `9px ${MONO}`, mw2);
+          }
+        }
+        if (stT) {
+          g.appendChild(stT); stT.setAttribute("opacity", 0);
+          animated.push({ start: S + 0.38, dur: 0.25, set: p => stT.setAttribute("opacity", p) });
+        }
+      }
 
       // 悬停（触屏以点击替代）
       bar.addEventListener("mouseenter", () => { bar.setAttribute("stroke-width", 2); });

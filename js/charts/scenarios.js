@@ -8,7 +8,7 @@
   if (!sc || !sc.rows) return;
   const body = U.frame(host, {
     title: "出口管制：三情景 × 七层传导矩阵",
-    sub: "红列 = 收紧 · 蓝列 = 冻结（当前基线，高亮）· 灰列 = 放松 · 点击任意单元格下钻 · 底部为触发条件",
+    sub: "红列 = 收紧 · 蓝列 = 冻结（当前基线，高亮）· 灰列 = 放松 · 点击任意单元格在矩阵下方展开完整文案 · 底部为触发条件",
     src: "官方披露 · 行业机构 · 本报告测算 · 截至 2026-07-17",
   });
 
@@ -37,6 +37,20 @@
     font-family:var(--mono);font-size:11px;color:var(--ink-md);line-height:1.8}
   #chart-scenarios .sc-trig b{color:var(--neg)}
   #chart-scenarios .sc-note{margin-top:10px;font-size:11px;color:var(--ink-lo);line-height:1.7}
+  #chart-scenarios .sc-cell.sel{outline:2px solid currentColor;outline-offset:-2px}
+  #chart-scenarios .sc-x{margin-top:12px;border-left:3px solid var(--blue);background:var(--paper-hi);
+    border-top:1px solid var(--line-lo);border-bottom:1px solid var(--line-lo);padding:12px 16px 11px;display:none}
+  #chart-scenarios .sc-x.on{display:block}
+  #chart-scenarios .sc-x-head{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+  #chart-scenarios .sc-x-title{font-family:var(--serif);font-weight:900;font-size:14px}
+  #chart-scenarios .sc-x-tag{font-family:var(--mono);font-size:9px;letter-spacing:.14em;color:var(--ink-lo)}
+  #chart-scenarios .sc-x-close{margin-left:auto;font-family:var(--mono);font-size:14px;color:var(--ink-lo);
+    cursor:pointer;border:1px solid var(--line);padding:0 8px;line-height:1.5}
+  #chart-scenarios .sc-x-close:hover{color:var(--ink);border-color:var(--ink)}
+  #chart-scenarios .sc-x-txt{margin-top:9px;font-family:var(--serif);font-size:14.5px;color:var(--ink);line-height:1.75}
+  #chart-scenarios .sc-x-sub{margin-top:8px;font-size:11px;color:var(--ink-md);line-height:1.7}
+  #chart-scenarios .sc-x-src{margin-top:8px;padding-top:7px;border-top:1px dashed var(--line-lo);
+    font-family:var(--mono);font-size:9.5px;color:var(--ink-lo)}
   `;
   const st = document.createElement("style"); st.textContent = css; document.head.appendChild(st);
 
@@ -61,6 +75,31 @@
 
   // 行
   const cells = [];
+  // 矩阵下方内联展开区（完整文案不再只靠弹卡）
+  const xPanel = document.createElement("div");
+  xPanel.className = "sc-x";
+  let xSel = null;
+  const closeX = () => {
+    xPanel.classList.remove("on");
+    if (xSel) { xSel.classList.remove("sel"); xSel = null; }
+  };
+  const openX = (cell, r, txt, j) => {
+    if (xSel === cell) { closeX(); return; }
+    if (xSel) xSel.classList.remove("sel");
+    xSel = cell;
+    cell.classList.add("sel");
+    const col = COLSTYLE[j].head;
+    xPanel.style.borderLeftColor = col;
+    xPanel.innerHTML =
+      `<div class="sc-x-head"><span class="sc-x-title" style="color:${col}">${U.esc(sc.cols[j])} × ${U.esc(r.layer)}</span>` +
+      `<span class="sc-x-tag">${j === base ? "当前基线" : "情景推演"} · 不预测政策，只准备响应</span>` +
+      `<span class="sc-x-close" role="button" aria-label="收起">×</span></div>` +
+      `<div class="sc-x-txt">${U.esc(txt)}</div>` +
+      `<div class="sc-x-sub">基线列判读：${U.esc(r.cells[base])}<br/>触发条件见矩阵下方；三情景为推演框架。</div>` +
+      `<div class="sc-x-src">${U.esc(U.fmtSrc("官方披露 · 行业机构 · 本报告测算 · 截至 2026-07-17"))}</div>`;
+    xPanel.classList.add("on");
+    xPanel.querySelector(".sc-x-close").addEventListener("click", e => { e.stopPropagation(); closeX(); });
+  };
   sc.rows.forEach(r => {
     const lab = document.createElement("div");
     lab.className = "sc-lab";
@@ -81,16 +120,12 @@
         cell.style.background = COLSTYLE[j].bg;
         cell.style.borderColor = "transparent";
       });
-      cell.addEventListener("click", e => U.showDrill({
-        title: `${sc.cols[j]} × ${r.layer}`,
-        value: txt,
-        sub: "情景为推演框架——不预测政策，只准备响应；触发条件见矩阵下方。",
-        source: "官方披露 · 行业机构 · 本报告测算 · 截至 2026-07-17",
-        x: e.clientX, y: e.clientY }));
+      cell.addEventListener("click", () => openX(cell, r, txt, j));
       mx.appendChild(cell);
       cells.push(cell);
     });
   });
+  inner.insertBefore(xPanel, mx.nextSibling);
 
   // 触发条件行
   const trig = document.createElement("div");

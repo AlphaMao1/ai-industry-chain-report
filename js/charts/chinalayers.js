@@ -9,7 +9,7 @@
   if (!D || !D.layers) return;
   const body = U.frame(host, {
     title: "中国产业链十一层：利润在哪一层结算",
-    sub: "蓝 = 证据强（有可验证的股东利润锚点）· 琥珀 = 观察（逻辑成立、缺直接披露）· 灰 = 证据弱（量增利未证）· 点击公司或层级下钻数字与口径",
+    sub: "蓝 = 证据强（有可验证的股东利润锚点）· 琥珀 = 观察（逻辑成立、缺直接披露）· 灰 = 证据弱（量增利未证）· 点击公司卡原位展开数字行",
     src: "官方披露 · 媒体报道与访谈 · 截至 2026-07-17",
   });
 
@@ -56,6 +56,18 @@
   #chart-chinalayers .cl-hw:hover{background:rgba(10,31,51,.03)}
   #chart-chinalayers .cl-hw b{font-family:var(--serif);color:var(--ink)}
   #chart-chinalayers .cl-hw .cl-hwtier{font-family:var(--mono);font-size:9.5px;color:var(--ink-lo);letter-spacing:.1em;display:block;margin-top:5px}
+  #chart-chinalayers .cl-co .cl-caret{float:right;font-family:var(--mono);font-size:10px;color:var(--ink-lo);
+    transition:transform .22s ease}
+  #chart-chinalayers .cl-co.open .cl-caret{transform:rotate(90deg);color:var(--blue)}
+  #chart-chinalayers .cl-co.open{border-color:var(--blue)}
+  #chart-chinalayers .cl-co-x{max-height:0;overflow:hidden;transition:max-height .32s ease}
+  #chart-chinalayers .cl-co.open .cl-co-x{max-height:340px}
+  #chart-chinalayers .cl-xrows{margin-top:8px;border-top:1px solid var(--line-lo);padding-top:7px}
+  #chart-chinalayers .cl-xrow{display:flex;gap:7px;font-family:var(--mono);font-size:10.5px;color:var(--ink);
+    line-height:1.65;padding:2.5px 0}
+  #chart-chinalayers .cl-xrow::before{content:"▪";color:var(--blue);flex:none}
+  #chart-chinalayers .cl-xfoot{margin-top:7px;border-top:1px dashed var(--line-lo);padding-top:6px;
+    font-family:var(--mono);font-size:9px;color:var(--ink-lo);line-height:1.6}
   `;
   const st = document.createElement("style"); st.textContent = css; document.head.appendChild(st);
 
@@ -84,7 +96,9 @@
       `<p class="cl-lname">${U.esc(L.name)}</p>`;
     rail.addEventListener("click", e => U.showDrill({
       title: `${L.name} · ${L.cls}`,
-      value: L.note || `${L.companies.length} 家公司落位于此层`,
+      value: L.note || (L.companies.length
+        ? `${L.companies.length} 家落位公司：${L.companies.map(co => co.name).join(" / ")}`
+        : "暂无可落位公司"),
       sub: D.classNote, source: srcOf(L), x: e.clientX, y: e.clientY }));
     row.appendChild(rail);
 
@@ -96,15 +110,17 @@
         el.className = "cl-co";
         el.style.borderColor = c.col;
         el.setAttribute("data-drill-keep", "1");
+        // 数字行：facts 按分号拆成结构化行（毛利率/收入/口径逐行可见，不再藏进下钻卡）
+        const factRows = String(co.facts || "").split("；").map(s => s.trim()).filter(Boolean);
         el.innerHTML =
-          `<p class="cl-coname">${U.esc(co.name)}</p>` +
+          `<p class="cl-coname">${U.esc(co.name)}<span class="cl-caret">▸</span></p>` +
           `<p class="cl-cofacts">${U.esc(co.facts)}</p>` +
-          (co.note ? `<p class="cl-conote">${U.esc(co.note)}</p>` : "");
-        el.addEventListener("click", e => U.showDrill({
-          title: `${L.name} · ${co.name}`,
-          value: co.facts,
-          sub: (co.note ? U.esc(co.note) + "<br/>" : "") + `层级判定：${U.esc(L.cls)}`,
-          source: srcOf(L), x: e.clientX, y: e.clientY }));
+          (co.note ? `<p class="cl-conote">${U.esc(co.note)}</p>` : "") +
+          `<div class="cl-co-x"><div class="cl-xrows">` +
+          factRows.map(f => `<div class="cl-xrow">${U.esc(f)}</div>`).join("") +
+          `</div><div class="cl-xfoot">层级判定：${U.esc(L.cls)}（${U.esc(D.classNote.split("。")[0])}）<br/>` +
+          `${U.esc(U.fmtSrc(srcOf(L)))} · 再次点击收起</div></div>`;
+        el.addEventListener("click", () => el.classList.toggle("open"));
         cos.appendChild(el);
       });
     } else {

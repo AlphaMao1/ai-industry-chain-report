@@ -178,7 +178,10 @@
       .attr("style", `font:8.5px ${MONO};fill:${P.inkMd}`)
       .text(nd.value);
     gg.on("click", e => U.showDrill({
-      title: nd.drill.title, value: nd.drill.value, sub: nd.drill.sub,
+      title: nd.drill.title, value: nd.drill.value,
+      // sub 补全：空 sub 时用数据集通电速度口径 + 热点枢纽同档注（均取自数据）
+      sub: nd.drill.sub ||
+        ((RPT.powerMap.explainer || "") + " 热点枢纽（北弗吉尼亚/凤凰城/达拉斯）接网同为 4–7 年档。"),
       source: nd.drill.source, x: e.clientX, y: e.clientY }));
     animated.push({ start: 0.45 + i * 0.12, dur: 0.4, set: p => gg.attr("opacity", p) });
   });

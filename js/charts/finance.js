@@ -105,6 +105,30 @@
       r.on("mouseleave", U.hideTip);
       r.on("click", e => U.showDrill({ title: g.drill.title, value: g.drill.value, sub: g.drill.sub,
         source: g.drill.source, x: e.clientX, y: e.clientY }));
+      // 构成块内嵌金额（块够高才放，放不下落到块顶上方；金额不再只靠悬停）
+      {
+        const inside = hPx >= 17;
+        const vlb = svg.append("text")
+          .attr("x", gx + gw / 2)
+          .attr("y", inside ? y(acc + g.v) + hPx / 2 + 3.5 : y(acc + g.v) - 5)
+          .attr("text-anchor", "middle")
+          .attr("style", "font:700 " + (inside ? 10 : 9) + "px " + U.FONTS.mono +
+            ";fill:" + (inside ? P.paperHi : P.inkMd) + ";pointer-events:none")
+          .attr("opacity", 0)
+          .text("$" + g.v + "B");
+        animated.push({ start: 0.55 + si * 0.14 + gi * 0.08, dur: 0.25, set: p => vlb.attr("opacity", p) });
+      }
+      // 构成块名（仅在块够高且宽时嵌一行小字，否则留给悬停与下钻）
+      if (hPx >= 30) {
+        const nlb = svg.append("text")
+          .attr("x", gx + gw / 2)
+          .attr("y", y(acc + g.v) + hPx / 2 + 15)
+          .attr("text-anchor", "middle")
+          .attr("style", "font:8.5px " + U.FONTS.mono + ";fill:" + P.paperHi + ";pointer-events:none")
+          .attr("opacity", 0)
+          .text(g.nm.length > 14 ? g.nm.slice(0, 13) + "…" : g.nm);
+        animated.push({ start: 0.62 + si * 0.14 + gi * 0.08, dur: 0.25, set: p => nlb.attr("opacity", p) });
+      }
       // 构成块分界发丝线
       if (gi > 0) svg.append("line").attr("x1", gx).attr("x2", gx + gw)
         .attr("y1", y(acc)).attr("y2", y(acc)).attr("stroke", P.paper).attr("stroke-width", 1.2);

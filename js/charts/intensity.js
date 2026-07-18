@@ -21,6 +21,8 @@
   #chart-intensity .it-val { font-family:var(--mono); font-weight:700; font-size:27px; color:var(--ink);
     line-height:1.15; letter-spacing:-.01em; }
   #chart-intensity .it-lab { font-family:var(--serif); font-size:13px; color:var(--ink-md); margin-top:7px; }
+  #chart-intensity .it-sub { font-family:var(--mono); font-size:9.5px; color:var(--ink-lo); margin-top:6px;
+    line-height:1.6; border-top:1px dashed var(--line-lo); padding-top:6px; }
   #chart-intensity .it-waste { margin-top:22px; border-top:2px solid var(--neg);
     border-bottom:1px solid var(--line-lo); padding:14px 4px 12px; cursor:pointer; }
   #chart-intensity .it-waste:hover { background:var(--paper-hi); }
@@ -50,7 +52,10 @@
   IT.cards.forEach(c => {
     const el = document.createElement("div");
     el.className = "it-card";
-    el.innerHTML = `<div class="it-val">${U.esc(c.value)}</div><div class="it-lab">${U.esc(c.label)}</div>`;
+    // 第三行：支撑注记（下钻 sub 的第一分句提到卡面）
+    const subLine = String((c.drill && c.drill.sub) || "").split(/；|。/)[0];
+    el.innerHTML = `<div class="it-val">${U.esc(c.value)}</div><div class="it-lab">${U.esc(c.label)}</div>` +
+      (subLine ? `<div class="it-sub">${U.esc(subLine)}</div>` : "");
     bind(el, c.drill);
     grid.appendChild(el);
   });

@@ -63,14 +63,18 @@
     const xc = xOf((it.a + it.b) / 2);
     const S = 0.18 + k * 0.12;
     const cardW = Math.min(212, Math.max(120, Math.ceil(Math.max(
-      tw(it.name, `700 12.5px ${SERIF}`), tw(it.event, `9.5px ${MONO}`))) + 18));
+      tw(it.name, `700 12.5px ${SERIF}`), tw(it.event, `9.5px ${MONO}`), tw(it.lesson, `8.5px ${MONO}`))) + 18));
     // 事件行超出卡宽则截断（全文在下钻卡）
     let evTxt = it.event;
     while (evTxt.length > 2 && tw(evTxt + "…", `9.5px ${MONO}`) > cardW - 18) evTxt = evTxt.slice(0, -1);
     if (evTxt !== it.event) evTxt += "…";
+    // 教训行（"为何重要"注记上卡面；超长截断，全文在下钻）
+    let lsTxt = it.lesson;
+    while (lsTxt.length > 2 && tw(lsTxt + "…", `8.5px ${MONO}`) > cardW - 18) lsTxt = lsTxt.slice(0, -1);
+    if (lsTxt !== it.lesson) lsTxt += "…";
     const cx0 = U.clamp(xc - cardW / 2, 8, W - 8 - cardW);
     const cy = up ? 26 : AXIS_Y + 56;
-    const stemTop = up ? cy + 52 : AXIS_Y + (isRange ? 6 : 5);
+    const stemTop = up ? cy + 64 : AXIS_Y + (isRange ? 6 : 5);
     const stemBot = up ? AXIS_Y - (isRange ? 6 : 5) : cy;
     const g = svgEl("g", { style: "cursor:pointer", role: "button", tabindex: "0" });
     svg.appendChild(g);
@@ -98,11 +102,11 @@
       stem.setAttribute("y2", stemTop + (stemBot - stemTop) * p);
     } });
 
-    // 卡片（年份 / 名称 / 事件）
-    const rect = svgEl("rect", { x: cx0, y: cy, width: cardW, height: 52,
+    // 卡片（年份 / 名称 / 事件 / 教训）
+    const rect = svgEl("rect", { x: cx0, y: cy, width: cardW, height: 64,
       fill: P.paperHi, stroke: c, "stroke-width": 1 });
     g.appendChild(rect);
-    const per = 2 * (cardW + 52);
+    const per = 2 * (cardW + 64);
     rect.setAttribute("stroke-dasharray", per);
     animated.push({ start: S, dur: 0.4, set: p => { rect.setAttribute("stroke-dashoffset", per * (1 - p)); } });
     const ey = svgEl("text", { x: cx0 + 9, y: cy + 14, style: `font:9px ${MONO};fill:${c}` });
@@ -111,7 +115,9 @@
     nm.textContent = it.name;
     const ev = svgEl("text", { x: cx0 + 9, y: cy + 45, style: `font:9.5px ${MONO};fill:${P.inkMd}` });
     ev.textContent = evTxt;
-    [ey, nm, ev].forEach((el, j) => {
+    const ls = svgEl("text", { x: cx0 + 9, y: cy + 58, style: `font:8.5px ${MONO};fill:${P.inkLo}` });
+    ls.textContent = "教训 " + lsTxt;
+    [ey, nm, ev, ls].forEach((el, j) => {
       g.appendChild(el); el.setAttribute("opacity", 0);
       animated.push({ start: S + 0.2 + j * 0.05, dur: 0.25, set: p => { el.setAttribute("opacity", p); } });
     });

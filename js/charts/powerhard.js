@@ -108,14 +108,14 @@
     svg.appendChild(vl);
     animated.push({ start: 0.55 + i * 0.2, dur: 0.3, set: p => vl.setAttribute("opacity", p) });
 
-    // 柱下：名称 + 注（两行截断，全文在下钻）
+    // 柱下：名称 + 注（三行截断，全文在下钻）
     const lb = S("text", { x: cx, y: BASE + 24, "text-anchor": "middle",
       style: `font:700 13px ${SERIF};fill:${P.ink}` });
     lb.textContent = c.label;
     svg.appendChild(lb);
     const lines = wrap(c.note, 30);
-    const shown = lines.slice(0, 2);
-    if (lines.length > 2) shown[1] = shown[1] + "…";
+    const shown = lines.slice(0, 3);
+    if (lines.length > 3) shown[2] = shown[2] + "…";
     shown.forEach((ln, k) => {
       const nt = S("text", { x: cx, y: BASE + 42 + k * 14, "text-anchor": "middle",
         style: `font:9px ${MONO};fill:${P.inkLo}` });
@@ -124,7 +124,10 @@
     });
 
     const drill = e => U.showDrill({
-      title: c.label, value: c.value, sub: c.note, source: c.source,
+      title: c.label,
+      // value 补全：读数 + 注记首分句（"5 年"类短读数不再裸奔）
+      value: c.value + "（" + String(c.note || "").split(/；|。/)[0] + "）",
+      sub: c.note, source: c.source,
       x: e.clientX, y: e.clientY });
     bar.addEventListener("click", drill);
     vl.addEventListener("click", drill);

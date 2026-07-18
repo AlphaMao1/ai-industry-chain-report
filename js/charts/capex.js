@@ -25,6 +25,53 @@
     return n.length > 1 ? (n[0] + n[n.length - 1]) / 2 : n[0];
   };
 
+  // ── 图侧展开面板（点击任意公司柱/公司名：承诺倍数与口径注内联展开，不用弹卡）──
+  const xcss = document.createElement("style");
+  xcss.textContent =
+    "#chart-capex .cx-x{margin-top:12px;border:1px solid var(--line);border-left:3px solid " + P.blue + ";" +
+    "background:var(--paper-hi);padding:12px 16px 11px}" +
+    "#chart-capex .cx-x-head{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}" +
+    "#chart-capex .cx-x-name{font-family:var(--serif);font-weight:900;font-size:14px;color:var(--ink)}" +
+    "#chart-capex .cx-x-close{margin-left:auto;font-family:var(--mono);font-size:14px;color:var(--ink-lo);" +
+    "cursor:pointer;border:1px solid var(--line);padding:0 8px;line-height:1.5}" +
+    "#chart-capex .cx-x-close:hover{color:var(--ink);border-color:var(--ink)}" +
+    "#chart-capex .cx-x-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-top:10px}" +
+    "@media(max-width:760px){#chart-capex .cx-x-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}" +
+    "#chart-capex .cx-x-cell{border-top:1.5px solid var(--ink);padding-top:6px}" +
+    "#chart-capex .cx-x-k{font-family:var(--mono);font-size:8.5px;letter-spacing:.1em;color:var(--ink-lo)}" +
+    "#chart-capex .cx-x-v{font-family:var(--mono);font-weight:700;font-size:14px;color:var(--ink);margin-top:3px}" +
+    "#chart-capex .cx-x-v.hot{color:" + P.red + "}" +
+    "#chart-capex .cx-x-note{margin-top:10px;font-size:11.5px;color:var(--ink-md);line-height:1.7}" +
+    "#chart-capex .cx-x-src{margin-top:8px;padding-top:7px;border-top:1px dashed var(--line-lo);" +
+    "font-family:var(--mono);font-size:9.5px;color:var(--ink-lo)}";
+  document.head.appendChild(xcss);
+
+  const xPanel = document.createElement("div");
+  xPanel.style.display = "none";
+  let xCo = null;
+  const openX = co => {
+    if (xCo === co && xPanel.style.display !== "none") { xPanel.style.display = "none"; xCo = null; return; }
+    xCo = co;
+    const hot = co.q1Ratio >= (C.threshold ? C.threshold.line : 1.0);
+    xPanel.className = "cx-x";
+    xPanel.innerHTML =
+      `<div class="cx-x-head"><span class="cx-x-name">${U.esc(co.name)}</span>` +
+      `<span style="font:10px ${U.FONTS.mono};color:${P.inkLo}">公司披露现金口径 · 点击 × 收起</span>` +
+      `<span class="cx-x-close" role="button" aria-label="收起">×</span></div>` +
+      `<div class="cx-x-grid">` +
+      `<div class="cx-x-cell"><div class="cx-x-k">FY2025 资本开支</div><div class="cx-x-v">$${co.fy2025}B</div></div>` +
+      `<div class="cx-x-cell"><div class="cx-x-k">2026E 指引</div><div class="cx-x-v">$${U.esc(co.guide2026)}B</div></div>` +
+      `<div class="cx-x-cell"><div class="cx-x-k">2026 Q1 购设备现金 ÷ 经营现金流</div><div class="cx-x-v${hot ? " hot" : ""}">${co.q1Ratio.toFixed(2)}×${hot ? " 红灯" : ""}</div></div>` +
+      `<div class="cx-x-cell"><div class="cx-x-k">已签约付款承诺 ÷ 年化经营现金流</div><div class="cx-x-v${co.commitRatio >= 1 ? " hot" : ""}">${co.commitRatio.toFixed(2)}×</div></div>` +
+      `</div>` +
+      `<div class="cx-x-note">资本开支/经营现金流（FY2025 口径）：${U.esc(co.capexOcf)} · TTM 资本开支 $${co.ttm}B<br/>${U.esc(co.note)}</div>` +
+      `<div class="cx-x-src">${U.esc(U.fmtSrc(SRC))} · 承诺倍数为"本报告测算，基于官方季报"（见 RPT.capex.threshold）</div>`;
+    xPanel.style.display = "";
+    xPanel.querySelector(".cx-x-close").addEventListener("click", e => {
+      e.stopPropagation(); xPanel.style.display = "none"; xCo = null;
+    });
+  };
+
   // ── 顶部合计标注条（全部取自 totals）──
   if (C.totals) {
     const t = C.totals;
@@ -112,15 +159,26 @@
           sub: co.note + (C.totals ? "<br/><br/>四家指引合计 $" + C.totals.guide2026 + "B（" + U.esc(C.totals.guide2026yoy) + "）。" : ""),
           source: SRC, x: e.clientX, y: e.clientY }));
       } else {
-        r.on("mouseenter", e => U.showTip("<b>" + U.esc(co.name) + " · " + YLAB[yr] + "</b>：$" + v.toFixed(1) + "B", e.clientX, e.clientY));
+        r.on("mouseenter", e => U.showTip("<b>" + U.esc(co.name) + " · " + YLAB[yr] + "</b>：$" + v.toFixed(1) +
+          "B<br/>点击在图侧展开该公司承诺倍数与口径", e.clientX, e.clientY));
         r.on("mousemove", e => U.showTip("<b>" + U.esc(co.name) + " · " + YLAB[yr] + "</b>：$" + v.toFixed(1) + "B", e.clientX, e.clientY));
         r.on("mouseleave", U.hideTip);
+        // 历史柱点击 → 图侧展开该公司面板（承诺倍数 / 现金压力 / 口径注）
+        r.style("cursor", "pointer").on("click", () => openX(co));
       }
     });
-    svg1.append("text")
+    const colab = svg1.append("text")
       .attr("x", x0(co.name) + x0.bandwidth() / 2).attr("y", H1 - BOT + 20)
       .attr("text-anchor", "middle")
-      .attr("style", "font:700 12px " + U.FONTS.serif + ";fill:" + P.ink).text(co.name);
+      .attr("style", "font:700 12px " + U.FONTS.serif + ";fill:" + P.ink + ";cursor:pointer").text(co.name);
+    colab.on("click", () => openX(co));
+    // 公司名下第二行：承诺倍数读数直接上图面（不再只藏下钻）
+    svg1.append("text")
+      .attr("x", x0(co.name) + x0.bandwidth() / 2).attr("y", H1 - BOT + 36)
+      .attr("text-anchor", "middle")
+      .attr("style", "font:9px " + U.FONTS.mono + ";fill:" + (co.commitRatio >= 1 ? P.red : P.inkLo) + ";cursor:pointer")
+      .text("承诺 " + co.commitRatio.toFixed(2) + "× · Q1 现金 " + co.q1Ratio.toFixed(2) + "×")
+      .on("click", () => openX(co));
   });
 
   // 图例
@@ -139,6 +197,7 @@
   basis.style.cssText = "margin:10px 0 0;font:10.5px " + U.FONTS.mono + ";color:" + P.inkLo + ";line-height:1.7";
   basis.textContent = "口径：" + C.basis + (C.altBasis ? "　备选：" + C.altBasis.name + " FY2025 合计 $" + C.altBasis.total2025 + "B（" + C.altBasis.yoy + "）——" + C.altBasis.note : "");
   body.appendChild(basis);
+  body.appendChild(xPanel); // 图侧展开位（点击公司柱/公司名后填充）
 
   // ═══ 组件二：阈值图（2026 Q1 当季购设备现金 ÷ 经营现金流）═══
   const h2 = document.createElement("p");
@@ -194,6 +253,10 @@
     lolli.push({ start: 0.55 + i * 0.12, dur: 0.25, set: p => lb.attr("opacity", p) });
     svg2.append("text").attr("x", cx).attr("y", H2 - BOT2 + 20).attr("text-anchor", "middle")
       .attr("style", "font:700 12px " + U.FONTS.serif + ";fill:" + P.ink).text(co.name);
+    // 承诺倍数直接上图面（原仅在下钻卡）
+    svg2.append("text").attr("x", cx).attr("y", H2 - BOT2 + 35).attr("text-anchor", "middle")
+      .attr("style", "font:9px " + U.FONTS.mono + ";fill:" + (co.commitRatio >= TH.line ? P.red : P.inkLo))
+      .text("承诺 " + co.commitRatio.toFixed(2) + "×");
     const drill = e => U.showDrill({
       title: "现金压力 · " + co.name + "（2026 Q1）",
       value: "当季购设备现金/经营现金流 " + co.q1Ratio.toFixed(2) + "× · 已签约付款承诺/年化经营现金流 " + co.commitRatio.toFixed(2) + "×",

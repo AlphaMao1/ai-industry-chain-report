@@ -36,15 +36,31 @@
   const inner = document.createElement("div"); inner.className = "et-inner";
   scroll.appendChild(inner); body.appendChild(scroll);
 
-  const PH = 50, TIER_GAP = 12, TIER_H = PH + TIER_GAP, TOP = 20, AXIS_GAP = 16;
+  const PH = 62, TIER_GAP = 12, TIER_H = PH + TIER_GAP, TOP = 20, AXIS_GAP = 16;
   const W = 1080, ML = 26, MR = 26, GAP = 10;
   const x = d3.scaleTime().domain([t0, t1]).range([ML, W - MR]);
 
   const mc = document.createElement("canvas").getContext("2d");
   const nameW = s => { mc.font = "700 12px " + SERIF; return mc.measureText(s).width; };
+  const statW = s => { mc.font = "700 8.5px " + MONO; return mc.measureText(s).width; };
+  // 从下钻 value 解析牌匾读数行（数字短语优先，全部取自数据文本）
+  const statOf = v => {
+    const s = String(v || "");
+    let m = s.match(/\d+\s*\/\s*\d+/); if (m) return m[0];
+    m = s.match(/[+−-]?\d[\d,.]*\s*%/); if (m) return m[0];
+    m = s.match(/[+−]?\d[\d,.]*\s*(?:倍|GW|MW|万亿|天)/); if (m) return m[0];
+    m = s.match(/\$[\d.,/–—\s-]*\d\s*[BTM]?/); if (m) return m[0].trim();
+    m = s.match(/停售 \d+ 天|下架 \d+ 天|\d+ 天/); if (m) return m[0];
+    m = s.match(/归零|停售|下架|不得入境|双向冻结|未放行/); if (m) return m[0];
+    return s.length > 12 ? s.slice(0, 12) + "…" : s;
+  };
+  // 空 sub 补全：用情景触发表语境（取自 RPT.scenarios，同属数据底稿）
+  const subOf = t => t.drill.sub ||
+    ("情景开关口径：" + ((RPT.scenarios && RPT.scenarios.triggers) || "不预测政策，只准备响应"));
 
-  // 贪心分层
-  const ps = EV.map(p => ({ ...p, w: Math.max(128, Math.ceil(nameW(p.label)) + 24) }))
+  // 贪心分层（宽 = 标签与读数行的最大者）
+  const ps = EV.map(p => ({ ...p, stat: statOf(p.drill && p.drill.value),
+    w: Math.max(128, Math.ceil(Math.max(nameW(p.label), statW(statOf(p.drill && p.drill.value)) + 4)) + 24) }))
     .sort((a, b) => a.start - b.start || a.i - b.i);
   const tiers = [];
   ps.forEach(p => {
@@ -147,11 +163,19 @@
         .attr("class", "txt").attr("opacity", 0)
         .text(label2);
     }
+    // 读数行：牌匾底部，把下钻里的头条数字提到图面
+    if (p.stat) {
+      g.append("text")
+        .attr("x", p.x + 10).attr("y", py + (label2 ? 57 : 46))
+        .attr("style", `font:700 8.5px ${MONO};fill:${P.inkMd}`)
+        .attr("class", "txt").attr("opacity", 0)
+        .text(p.stat);
+    }
 
     rect.on("mouseenter", () => rect.attr("stroke-width", 2));
     rect.on("mouseleave", () => rect.attr("stroke-width", 1));
     g.on("click", e => U.showDrill({
-      title: p.drill.title, value: p.drill.value, sub: p.drill.sub,
+      title: p.drill.title, value: p.drill.value, sub: subOf(p),
       source: p.drill.source, x: e.clientX, y: e.clientY }));
   });
 

@@ -445,3 +445,19 @@ footer#sec-sources { padding: 60px 0 90px; }
   .scroll-hint span { animation: none; }
   .dl-notes, .sp-path { transition: none; }
 }
+
+/* ── 正文结构化数字条（文字重构组 .stat-strip）：复用 key-band 单元，自适应栅格 ── */
+.stat-strip {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  margin: 18px 0;
+  border-top: 1px solid var(--line); border-bottom: 1px solid var(--line);
+}
+.stat-strip .kb-item { padding: 14px 14px 12px; }
+.stat-strip .kb-v { font-size: clamp(18px, 2vw, 24px); }
+
+/* ── 数字短句分行（.num-line）：紧凑行距 + 悬挂缩进，引导词加粗顶格 ── */
+.num-line {
+  line-height: 1.65; margin: 7px 0;
+  padding-left: 1.1em; text-indent: -1.1em;
+}
+.num-line b { text-indent: 0; }

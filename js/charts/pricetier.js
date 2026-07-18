@@ -174,5 +174,12 @@
   setActive("base");
 
   U.play(animated, svg, { threshold: 0.3 });
+
+  // 走廊脚注：已知局限与自校验指引（把下钻里的警示提到图面）
+  const lim = document.createElement("p");
+  lim.style.cssText = `font:10px ${U.FONTS.mono};color:${P.inkMd};margin-top:8px;line-height:1.7`;
+  lim.textContent = "已知局限：" + String(RP.drill.sub || "").replace(/^已知局限：/, "") + " 自校验警示见前沿档红栏图。";
+  body.appendChild(lim);
+
   U.reveal(body, ".pt-card", 130);
 })();

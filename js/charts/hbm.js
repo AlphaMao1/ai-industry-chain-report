@@ -100,11 +100,33 @@
 
     rect.addEventListener("click", e => U.showDrill({
       title: "单卡内存 · " + d.gen + "（" + d.year + "）",
-      value: d.capacity + (d.bandwidth ? " · 带宽 " + d.bandwidth : ""),
-      sub: d.note || undefined,
-      source: "官方披露 · 官方路线图",
+      // value 补全：容量 + 带宽 + 级间倍数（全部由数据推算/引用）
+      value: "单卡内存上限 " + d.capacity + (d.bandwidth ? " · 带宽 " + d.bandwidth : "") +
+        (d.i > 0 ? "（较上一代 " + steps[d.i - 1].gen + " " + steps[d.i - 1].capacity + " 提升 ×" +
+          (capGB(d.capacity) / Math.max(1e-9, capGB(steps[d.i - 1].capacity))).toFixed(1) + "）" : ""),
+      // sub 补全：无注记代际给阶梯链定位句
+      sub: d.note || "单卡内存容量上限持续抬升，驱动瓶颈沿 GPU → 内存 → 封装 → 电力单向迁移（见四棒接力图）。",
+      source: "官方披露 · 官方路线图 · 截至 2026-07-17",
       x: e.clientX, y: e.clientY }));
   });
+
+  // ── 代际注记（原只藏下钻：HBM4 标准要点 / 单柜功耗，提到图面脚注）──
+  {
+    const noted = data.filter(d => d.note);
+    if (noted.length) {
+      const ny = BASE + 40;
+      const seen = [];
+      noted.forEach(d => d.note.split(/；|。/).map(s2 => s2.trim()).filter(Boolean)
+        .forEach(t => { if (!seen.includes(t)) seen.push(t); }));
+      seen.slice(0, 2).forEach((t, k) => {
+        const nt = S("text", { x: ML - 10, y: ny + k * 15,
+          style: `font:8.5px ${MONO};fill:${P.inkLo}`, opacity: 0 });
+        nt.textContent = "注 " + t + (k === seen.slice(0, 2).length - 1 && !/。$/.test(t) ? "。" : "");
+        svg.appendChild(nt);
+        animated.push({ start: 1.2 + k * 0.1, dur: 0.3, set: p => nt.setAttribute("opacity", p) });
+      });
+    }
+  }
 
   // 级间倍数箭头（由解析容量计算）
   for (let i = 0; i < n - 1; i++) {

@@ -11,7 +11,7 @@
 
   const body = U.frame(host, {
     title: "先例矩阵：资本开支超过经营现金流之后，都发生了什么",
-    sub: "历史样本 × 结局对照 · 点击任意一行看细节与出处",
+    sub: "历史样本 × 结局对照 · 点击任意一行原位展开细节与出处",
     src: (M.source || "行业机构 · 史料") + " · 截至 2026-07-17",
   });
 
@@ -45,7 +45,15 @@
     "#chart-precedent .pc-chip.mis{background:repeating-linear-gradient(45deg,rgba(10,31,51,.14) 0 5px,transparent 5px 10px);" +
     "color:var(--ink-md);border:1px dashed var(--ink-lo)}" +
     "#chart-precedent .pc-leg{display:flex;gap:18px;flex-wrap:wrap;margin-top:12px;font-family:var(--mono);" +
-    "font-size:10px;color:var(--ink-md)}";
+    "font-size:10px;color:var(--ink-md)}" +
+    "#chart-precedent .pc-x{max-height:0;overflow:hidden;transition:max-height .35s ease;border-bottom:1px solid var(--line)}" +
+    "#chart-precedent .pc-x.open{max-height:260px}" +
+    "#chart-precedent .pc-xin{padding:11px 14px 12px;border-left:3px solid var(--pc-xcol,var(--ink-md));background:var(--paper-hi)}" +
+    "#chart-precedent .pc-xt{font-family:var(--serif);font-weight:700;font-size:12.5px;color:var(--ink);line-height:1.6}" +
+    "#chart-precedent .pc-xn{font-size:11.5px;color:var(--ink-md);line-height:1.75;margin-top:6px}" +
+    "#chart-precedent .pc-xs{font-family:var(--mono);font-size:9px;color:var(--ink-lo);margin-top:7px;" +
+    "border-top:1px dashed var(--line-lo);padding-top:6px}" +
+    "#chart-precedent .pc-row.sel{background:rgba(34,81,255,.06)}";
   const st = document.createElement("style"); st.textContent = css; document.head.appendChild(st);
 
   const scroll = document.createElement("div"); scroll.className = "pc-scroll"; body.appendChild(scroll);
@@ -59,6 +67,12 @@
   grid.appendChild(head);
 
   const rows = [];
+  let xEl = null, xRow = null;
+  const closeX = () => {
+    if (xEl) { xEl.classList.remove("open"); }
+    if (xRow) { xRow.classList.remove("sel"); }
+    xEl = null; xRow = null;
+  };
   M.cases.forEach(c => {
     const row = document.createElement("div");
     row.className = "pc-row";
@@ -73,12 +87,25 @@
       }
     });
     row.innerHTML = html;
-    row.addEventListener("click", e => U.showDrill({
-      title: c.name + " · 结局：" + c.outcome,
-      value: c.outcome === "没崩" ? "唯一例外——监管保底回报" : c.outcome === "误引" ? "常被引为反例，实为误引" : c.outcome,
-      sub: U.esc(c.note),
-      source: (M.source || "行业机构 · 史料") + " · 截至 2026-07-17", x: e.clientX, y: e.clientY }));
-    grid.appendChild(row); rows.push(row);
+    // 行内联展开（全文不再只靠弹卡）：结局判读 + note 全文 + 出处
+    const x = document.createElement("div");
+    x.className = "pc-x";
+    x.style.setProperty("--pc-xcol", OCOL[c.outcome]);
+    const verdict = c.outcome === "没崩" ? "唯一例外——监管保底回报"
+      : c.outcome === "误引" ? "常被引为反例，实为误引"
+      : c.outcome + " · " + ONOTE[c.outcome];
+    x.innerHTML = "<div class='pc-xin'><div class='pc-xt'>" + U.esc(c.name) + " · 结局：" + U.esc(verdict) + "</div>" +
+      "<div class='pc-xn'>" + U.esc(c.note) + "</div>" +
+      "<div class='pc-xs'>" + U.esc(U.fmtSrc((M.source || "行业机构 · 史料") + " · 截至 2026-07-17")) + " · 再次点击收起</div></div>";
+    row.addEventListener("click", () => {
+      if (xEl === x) { closeX(); return; }
+      closeX();
+      xEl = x; xRow = row;
+      x.classList.add("open"); row.classList.add("sel");
+    });
+    grid.appendChild(row);
+    grid.appendChild(x);
+    rows.push(row);
   });
 
   // 图例
